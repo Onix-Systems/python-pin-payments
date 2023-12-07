@@ -1,0 +1,17 @@
+[flake8]
+ignore = E203,W503,E101,W191,W291,DJ01
+exclude =
+    migrations,
+    .git,
+    .gitignore,
+    *.pot,
+    *.py[co],
+    __pycache__,
+    venv,
+    .env,
+    settings_default.py,
+    urls_default.py,
+    apps.py,
+    tests.py,
+    config_dev.py,
+max-line-length = 120
