@@ -1,4 +1,8 @@
 from typing import Optional
+from urllib.parse import urlencode
+
+import requests
+from requests.auth import HTTPBasicAuth
 
 
 class ChargesAPI:
@@ -7,6 +11,8 @@ class ChargesAPI:
             api_key: str,
     ):
         self.__api_key = api_key
+        self.__base_url = 'https://api.pinpayments.com/1/charges/'
+        self.__auth = HTTPBasicAuth(self.__api_key, '')
 
     def post_charges(
             self,
@@ -68,9 +74,31 @@ class ChargesAPI:
         :param customer_token: The token of the customer to be charged, as returned from the customers API.
         :return: None
         """
-        ...
+        data = {
+            "email": email,
+            "description": description,
+            "amount": amount,
+            "ip_address": ip_address,
+            # TODO think how to add payments deatails here
+            '...': ...,
+            "currency": currency,
+            "capture": capture,
+            "reference": reference,
+            **({"metadata": metadata} if metadata else {}),
+            **({"three_d_secure": three_d_secure} if three_d_secure else {}),
+            **({"platform_adjustment": platform_adjustment} if platform_adjustment else {})
+        }
+        data = {k: v for k, v in data.items() if v is not None}
+        response = requests.post(self.__base_url, auth=self.__auth, data=data)
 
-    def put_charges_charge_token_void(self) -> None:
+        if response.status_code in [201, 202]:
+            return response.json()
+        return response.raise_for_status()
+
+    def put_charges_charge_token_void(
+            self,
+            charge_token: str
+    ) -> None:
         """
         Voids a previously authorised charge and returns its details.
         This will return the reserved funds to the cardholder, and capture will no longer be possible.
@@ -80,11 +108,20 @@ class ChargesAPI:
         Example:
         curl https://test-api.pinpayments.com/1/charges/ch_lfUYEBK14zotCTykezJkfg/void -u your-secret-api-key: -X PUT
 
+        :param charge_token: Your charge token
         :return: None
         """
-        ...
+        url = f"{self.__base_url}{charge_token}/void"
+        response = requests.put(url, auth=self.__auth)
 
-    def put_charges_charge_token_capture(self) -> None:
+        if response.status_code == 200:
+            return response.json()
+        return response.raise_for_status()
+
+    def put_charges_charge_token_capture(
+            self,
+            charge_token: str
+    ) -> None:
         """
         Captures a previously authorised charge and returns its details.
         Currently, you can only capture the full amount that was originally authorised.
@@ -94,9 +131,15 @@ class ChargesAPI:
         Example:
         curl https://test-api.pinpayments.com/1/charges/ch_lfUYEBK14zotCTykezJkfg/capture -u your-secret-api-key: -X PUT
 
+        :param charge_token: Your charge token
         :return: None
         """
-        ...
+        url = f"{self.__base_url}{charge_token}/capture"
+        response = requests.put(url, auth=self.__auth)
+
+        if response.status_code == 201:
+            return response.json()
+        return response.raise_for_status()
 
     def get_charges(self) -> None:
         """
@@ -109,7 +152,11 @@ class ChargesAPI:
 
         :return: None
         """
-        ...
+        response = requests.get(self.__base_url, auth=self.__auth)
+
+        if response.status_code == 200:
+            return response.json()
+        return response.raise_for_status()
 
     def get_charges_search(
             self,
@@ -134,9 +181,26 @@ class ChargesAPI:
         :param direction: The direction in which to sort the charges (1 for ascending or -1 for descending). Default value is 1.
         :return: None
         """
-        ...
+        params = {
+            "query": query,
+            "start_date": start_date,
+            "end_date": end_date,
+            "sort": sort,
+            "direction": direction
+        }
 
-    def get_charges_charge_token(self) -> None:
+        filtered_params = {k: v for k, v in params.items() if v is not None}
+        url = f"{self.__base_url}search?" + urlencode(filtered_params)
+        response = requests.get(url, auth=self.__auth)
+
+        if response.status_code == 200:
+            return response.json()
+        return response.raise_for_status()
+
+    def get_charges_charge_token(
+            self,
+            charge_token: str
+    ) -> None:
         """
         Returns the details of a charge.
 
@@ -145,11 +209,20 @@ class ChargesAPI:
         Example:
         curl https://test-api.pinpayments.com/1/charges/ch_lfUYEBK14zotCTykezJkfg -u your-secret-api-key:
 
+        :param charge_token: Your charge token
         :return: None
         """
-        ...
+        url = f"{self.__base_url}{charge_token}/"
+        response = requests.get(url, auth=self.__auth)
 
-    def get_charges_verify(self) -> None:
+        if response.status_code == 200:
+            return response.json()
+        return response.raise_for_status()
+
+    def get_charges_verify(
+            self,
+            session_token: str
+    ) -> None:
         """
         Verify the result of a 3D Secure enabled charge.
         For more information about 3D Secure, see the 3D Secure integration guide.
@@ -159,9 +232,15 @@ class ChargesAPI:
         Example:
         curl https://api.pinpayments.com/1/charges/verify -u your-secret-api-key: -X GET -d "session_token=se_sGt9PuNYfVzJqTSLP2CV8g"
 
+        :param session_token: Your session token
         :return: None
         """
-        ...
+        url = f"{self.__base_url}verify?session_token={session_token}"
+        response = requests.get(url, auth=self.__auth)
+
+        if response.status_code == 200:
+            return response.json()
+        return response.raise_for_status()
 
 
 if __name__ == '__main__':
