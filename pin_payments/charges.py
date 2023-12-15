@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 from urllib.parse import urlencode
 
@@ -6,6 +7,10 @@ from requests.auth import HTTPBasicAuth
 
 
 class ChargesAPI:
+    """
+    The charges API allows you to create new payment card charges and retrieve details of previous charges.
+    """
+
     def __init__(
             self,
             api_key: str,
@@ -31,7 +36,7 @@ class ChargesAPI:
             card_token: Optional[str] = None,
             payment_source_token: Optional[str] = None,
             customer_token: Optional[str] = None,
-    ) -> None:
+    ) -> dict:
         """
         Creates a new charge and returns its details. This may be a long-running request.
 
@@ -93,12 +98,13 @@ class ChargesAPI:
 
         if response.status_code in [201, 202]:
             return response.json()
-        return response.raise_for_status()
+        logging.error(f"Error: {response.status_code}, {response.text}")
+        return {"error": f"Error: {response.status_code}, {response.text}"}
 
     def put_charges_charge_token_void(
             self,
             charge_token: str
-    ) -> None:
+    ) -> dict:
         """
         Voids a previously authorised charge and returns its details.
         This will return the reserved funds to the cardholder, and capture will no longer be possible.
@@ -116,12 +122,13 @@ class ChargesAPI:
 
         if response.status_code == 200:
             return response.json()
-        return response.raise_for_status()
+        logging.error(f"Error: {response.status_code}, {response.text}")
+        return {"error": f"Error: {response.status_code}, {response.text}"}
 
     def put_charges_charge_token_capture(
             self,
             charge_token: str
-    ) -> None:
+    ) -> dict:
         """
         Captures a previously authorised charge and returns its details.
         Currently, you can only capture the full amount that was originally authorised.
@@ -139,9 +146,10 @@ class ChargesAPI:
 
         if response.status_code == 201:
             return response.json()
-        return response.raise_for_status()
+        logging.error(f"Error: {response.status_code}, {response.text}")
+        return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def get_charges(self) -> None:
+    def get_charges(self) -> dict:
         """
         Returns a paginated list of all charges.
 
@@ -156,7 +164,8 @@ class ChargesAPI:
 
         if response.status_code == 200:
             return response.json()
-        return response.raise_for_status()
+        logging.error(f"Error: {response.status_code}, {response.text}")
+        return {"error": f"Error: {response.status_code}, {response.text}"}
 
     def get_charges_search(
             self,
@@ -165,7 +174,7 @@ class ChargesAPI:
             end_date: Optional[str] = None,
             sort: Optional[str] = None,
             direction: Optional[int] = None,
-    ) -> None:
+    ) -> dict:
         """
         Returns a paginated list of charges matching the search criteria.
 
@@ -195,12 +204,13 @@ class ChargesAPI:
 
         if response.status_code == 200:
             return response.json()
-        return response.raise_for_status()
+        logging.error(f"Error: {response.status_code}, {response.text}")
+        return {"error": f"Error: {response.status_code}, {response.text}"}
 
     def get_charges_charge_token(
             self,
             charge_token: str
-    ) -> None:
+    ) -> dict:
         """
         Returns the details of a charge.
 
@@ -217,12 +227,13 @@ class ChargesAPI:
 
         if response.status_code == 200:
             return response.json()
-        return response.raise_for_status()
+        logging.error(f"Error: {response.status_code}, {response.text}")
+        return {"error": f"Error: {response.status_code}, {response.text}"}
 
     def get_charges_verify(
             self,
             session_token: str
-    ) -> None:
+    ) -> dict:
         """
         Verify the result of a 3D Secure enabled charge.
         For more information about 3D Secure, see the 3D Secure integration guide.
@@ -240,7 +251,8 @@ class ChargesAPI:
 
         if response.status_code == 200:
             return response.json()
-        return response.raise_for_status()
+        logging.error(f"Error: {response.status_code}, {response.text}")
+        return {"error": f"Error: {response.status_code}, {response.text}"}
 
 
 if __name__ == '__main__':
