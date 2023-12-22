@@ -158,10 +158,20 @@ class CustomersAPI:
             primary_card_token: Optional[str] = None,
     ) -> dict:
         """
-        Updates the details of a customer and returns the updated details. You can update the customer’s cards in one of four ways:
-        You can use the card[...] parameters to store a new card that will replace the customer’s primary card. The customer’s current primary card will be removed from storage and you will not be able to recover it.
-        You can use the card_token parameter to replace the customer’s primary card with a previously stored card. The card token must either be already associated with this customer record or unused. The customer’s current primary card will be removed from storage and you will not be able to recover it.
-        You can use the primary_card_token parameter to switch the customer’s primary card to a previously stored card. The card token must either be already associated with this customer record or unused. The current primary card will become a non-primary card of the customer.
+        Updates the details of a customer and returns the updated details.
+        You can update the customer’s cards in one of four ways:
+        You can use the card[...] parameters to store a new card that will replace the
+        customer’s primary card. The customer’s current primary card will be removed from
+        storage and you will not be able to recover it.
+        You can use the card_token parameter to replace the customer’s primary card
+        with a previously stored card. The card token must either be already associated
+        with this customer record or unused. The customer’s current primary card will be
+        removed from storage and you will not be able to recover it.
+        You can use the primary_card_token parameter to switch the customer’s
+        primary card to a previously stored card.
+        The card token must either be already associated with this customer
+        record or unused. The current primary card will become a non-primary card
+        of the customer.
         You can use none of the above parameters. The customer’s cards will not change.
         In addition, you can update the customer’s email address and contact details.
 
@@ -196,7 +206,8 @@ class CustomersAPI:
         :param notes: Internal notes for the customer.
         :param card: The full details of the payment card to be stored
         :param card_token: The token of the card to be stored, as returned from the cards API or customers API.
-        :param primary_card_token: The token of the card to become the customer’s primary card, as returned from the cards API or customers API.
+        :param primary_card_token: The token of the card to become the customer’s
+        primary card, as returned from the cards API or customers API.
         :return: None
         """
         url = f"{self.__base_url}{customer_token}"
@@ -348,12 +359,14 @@ class CustomersAPI:
         :param name: The name on the card (e.g. Roland Robot).
         :param address_line1: Line 1 of the card’s billing address (e.g. 42 Sevenoaks St).
         :param address_city: The city of the card’s billing address (e.g. Lathlain).
-        :param address_country: The country of the card’s billing address. Either the full name (e.g. Australia) or the ISO 3166-1 two-letter country code (e.g. AU).
+        :param address_country: The country of the card’s billing address.
+        Either the full name (e.g. Australia) or the ISO 3166-1 two-letter country code (e.g. AU).
         :param publishable_api_key: Your publishable API key, if requesting from an insecure environment.
         :param address_line2: Line 2 of the card’s billing address (e.g. Apt 1).
         :param address_postcode: The postcode of the card’s billing address (e.g. 6454).
         :param address_state: The state of the card’s billing address (e.g. WA).
-        :param card_token: The token of the card to be associated with the customer, as returned from the cards API or customers API.
+        :param card_token: The token of the card to be associated with the customer,
+        as returned from the cards API or customers API.
         :return: None
         """
         url = f"{self.__base_url}{customer_token}/cards"
@@ -397,7 +410,8 @@ class CustomersAPI:
         DELETE /customers/customer-token/cards/card-token
 
         Example:
-        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ/cards/card_ZFThCjFi7wCNkopytxQVKA -u your-secret-api-key: -X DELETE
+        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ/
+        cards/card_ZFThCjFi7wCNkopytxQVKA -u your-secret-api-key: -X DELETE
 
         :param customer_token: Token of the customer.
         :param card_token: Card token of the customer.
@@ -421,7 +435,8 @@ class CustomersAPI:
         GET /customers/customer-token/subscriptions
 
         Example:
-        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ/subscriptions -u your-secret-api-key:
+        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ/
+        subscriptions -u your-secret-api-key:
 
         :param customer_token: Token of the customer.
         :return: None
@@ -440,12 +455,14 @@ class CustomersAPI:
             subscription_token: str
     ) -> dict:
         """
-        Cancels the subscription identified by subscription token. Subscriptions can only be cancelled if they are in trial or active state.
+        Cancels the subscription identified by subscription token.
+        Subscriptions can only be cancelled if they are in trial or active state.
 
         DELETE /customers/customer-token/subscriptions/sub-token
 
         Example:
-        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ/subscriptions/sub_bZWXhTzHooKpk9FZjQfzqQ -u your-secret-api-key: -X DELETE
+        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ/
+        subscriptions/sub_bZWXhTzHooKpk9FZjQfzqQ -u your-secret-api-key: -X DELETE
 
         :param customer_token: Token of the customer.
         :param subscription_token: Subscription token of the customer.

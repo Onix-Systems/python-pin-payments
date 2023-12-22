@@ -65,17 +65,26 @@ class ChargesAPI:
 
         :param email: The email address of the purchaser.
         :param description: A description of the item purchased (e.g. 500g of single origin beans).
-        :param amount: The amount to charge in the currency’s base unit (e.g. cents for AUD, yen for JPY). There is a minimum charge amount for each currency; refer to the documentation on supported currencies.
+        :param amount: The amount to charge in the currency’s base unit
+        (e.g. cents for AUD, yen for JPY). There is a minimum charge amount for each currency;
+        refer to the documentation on supported currencies.
         :param ip_address: The IP address of the person submitting the payment.
-        :param currency: The three-character ISO 4217 currency code of one of our supported currencies, e.g. AUD or USD. Default value is AUD.
-        :param capture: Whether to immediately capture the charge (true or false). If false, we will attempt to create an authorisation; if this is successful, you can capture at a later time. Authorised charges automatically expire after seven days. Default value is true.
-        :param reference: A custom text string which will be displayed in place of the default descriptor on the customer's bank statement.
+        :param currency: The three-character ISO 4217 currency code of one of our
+        supported currencies, e.g. AUD or USD. Default value is AUD.
+        :param capture: Whether to immediately capture the charge (true or false).
+        If false, we will attempt to create an authorisation; if this is successful,
+        you can capture at a later time. Authorised charges automatically expire after seven
+        days. Default value is true.
+        :param reference: A custom text string which will be displayed in place of the
+        default descriptor on the customer's bank statement.
         :param metadata: Arbitrary key-value data to be associated with the charge.
         :param three_d_secure: Information required to enable 3D Secure on payments.
-        :param platform_adjustment: Specify an amount to withhold from the merchant entitlement to collect as revenue for your platform.
+        :param platform_adjustment: Specify an amount to withhold from the merchant
+        entitlement to collect as revenue for your platform.
         :param card: The full details of the payment card to be charged
         :param card_token: The token of the card to be charged, as returned from the cards API or customers API.
-        :param payment_source_token: The token of the payment source to be charged, as returned from the payment_sources API.
+        :param payment_source_token: The token of the payment source to be charged,
+        as returned from the payment_sources API.
         :param customer_token: The token of the customer to be charged, as returned from the customers API.
         :return: None
         """
@@ -183,11 +192,15 @@ class ChargesAPI:
         Example:
         curl https://test-api.pinpayments.com/1/charges/search -u your-secret-api-key: -X GET -d "query=test%20charge"
 
-        :param query: Return only charges whose fields match the query. Fields covered include description, email, metadata, cardholder name, currency, amount (exact), charge token (exact), card token (exact), refund token (exact), and customer token (exact).
+        :param query: Return only charges whose fields match the query.
+        Fields covered include description, email, metadata, cardholder name,
+        currency, amount (exact), charge token (exact), card token (exact), refund token
+        (exact), and customer token (exact).
         :param start_date: Return only charges created on or after this date (e.g. 2012/12/25).
         :param end_date: Return only charges created before this date (e.g. 2013/12/25).
         :param sort: The field used to sort the charges (created_at or amount). Default value is created_at.
-        :param direction: The direction in which to sort the charges (1 for ascending or -1 for descending). Default value is 1.
+        :param direction: The direction in which to sort the charges
+        (1 for ascending or -1 for descending). Default value is 1.
         :return: None
         """
         params = {
@@ -241,7 +254,8 @@ class ChargesAPI:
         GET /charges/verify?session_token=session-token
 
         Example:
-        curl https://api.pinpayments.com/1/charges/verify -u your-secret-api-key: -X GET -d "session_token=se_sGt9PuNYfVzJqTSLP2CV8g"
+        curl https://api.pinpayments.com/1/charges/verify -u your-secret-api-key: -X GET
+        -d "session_token=se_sGt9PuNYfVzJqTSLP2CV8g"
 
         :param session_token: Your session token
         :return: None

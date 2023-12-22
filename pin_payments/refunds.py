@@ -73,10 +73,12 @@ class RefundsAPI:
         POST /charges/charge-token/refunds
 
         Example:
-        curl https://test-api.pinpayments.com/1/charges/ch_bZ3RhJnIUZ8HhfvH8CCvfA/refunds -u your-secret-api-key: -X POST
+        curl https://test-api.pinpayments.com/1/charges/ch_bZ3RhJnIUZ8HhfvH8CCvfA/refunds
+        -u your-secret-api-key: -X POST
 
         :param charge_token: Charge Token
-        :param amount: The amount to refund in the currency’s base unit (e.g. cents for AUD, yen for JPY). Default value is the full amount of the charge.
+        :param amount: The amount to refund in the currency’s base unit
+        (e.g. cents for AUD, yen for JPY). Default value is the full amount of the charge.
         :return: None
         """
         url = f"{self.__base_url}charges/{charge_token}/refunds"
