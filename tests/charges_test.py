@@ -1,13 +1,13 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from pin_payments.charges import ChargesAPI
+from pin_payments.charges import Charges
 from requests.auth import HTTPBasicAuth
 
 
 class TestChargesAPI(unittest.TestCase):
     def setUp(self):
         self.api_key = 'test_api_key'
-        self.charges_api = ChargesAPI(api_key=self.api_key)
+        self.charges_api = Charges(api_key=self.api_key)
 
     def test_init(self):
         self.assertEqual(self.charges_api._ChargesAPI__api_key, self.api_key)

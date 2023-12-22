@@ -3,13 +3,13 @@ from unittest.mock import patch, MagicMock
 
 from requests.auth import HTTPBasicAuth
 
-from pin_payments.refunds import RefundsAPI
+from pin_payments.refunds import Refunds
 
 
 class TestRefundsAPI(unittest.TestCase):
     def setUp(self):
         self.api_key = 'test_api_key'
-        self.refunds_api = RefundsAPI(api_key=self.api_key)
+        self.refunds_api = Refunds(api_key=self.api_key)
 
     def test_init(self):
         self.assertEqual(self.refunds_api._RefundsAPI__api_key, self.api_key)

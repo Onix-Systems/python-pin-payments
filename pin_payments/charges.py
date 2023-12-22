@@ -3,10 +3,11 @@ from typing import Optional
 from urllib.parse import urlencode
 
 import requests
-from requests.auth import HTTPBasicAuth
+
+from pin_payments.base import Base
 
 
-class ChargesAPI:
+class Charges(Base):
     """
     The charges API allows you to create new payment card charges and retrieve details of previous charges.
     """
@@ -14,10 +15,10 @@ class ChargesAPI:
     def __init__(
             self,
             api_key: str,
+            mode: str = 'live'
     ):
-        self.__api_key = api_key
-        self.__base_url = 'https://api.pinpayments.com/1/charges/'
-        self.__auth = HTTPBasicAuth(self.__api_key, '')
+        super().__init__(api_key=api_key, mode=mode)
+        self._base_url += 'charges/'
 
     def post_charges(
             self,
@@ -35,7 +36,7 @@ class ChargesAPI:
             card: Optional[dict] = None,
             card_token: Optional[str] = None,
             payment_source_token: Optional[str] = None,
-            customer_token: Optional[str] = None,
+            customer_token: Optional[str] = None
     ) -> dict:
         """
         Creates a new charge and returns its details. This may be a long-running request.
@@ -88,6 +89,11 @@ class ChargesAPI:
         :param customer_token: The token of the customer to be charged, as returned from the customers API.
         :return: None
         """
+        if (
+                card is not None and card_token is not None and payment_source_token is not None
+                and customer_token is not None
+        ):
+            raise ValueError('Use only one of [card, card_token, payment_source_token, customer_token]')
         data = {
             "email": email,
             "description": description,
@@ -103,7 +109,7 @@ class ChargesAPI:
             **({"platform_adjustment": platform_adjustment} if platform_adjustment else {})
         }
         data = {k: v for k, v in data.items() if v is not None}
-        response = requests.post(self.__base_url, auth=self.__auth, data=data)
+        response = requests.post(self._base_url, auth=self._auth, data=data)
 
         if response.status_code in [201, 202]:
             return response.json()
@@ -126,8 +132,8 @@ class ChargesAPI:
         :param charge_token: Your charge token
         :return: None
         """
-        url = f"{self.__base_url}{charge_token}/void"
-        response = requests.put(url, auth=self.__auth)
+        url = f"{self._base_url}{charge_token}/void"
+        response = requests.put(url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -150,8 +156,8 @@ class ChargesAPI:
         :param charge_token: Your charge token
         :return: None
         """
-        url = f"{self.__base_url}{charge_token}/capture"
-        response = requests.put(url, auth=self.__auth)
+        url = f"{self._base_url}{charge_token}/capture"
+        response = requests.put(url, auth=self._auth)
 
         if response.status_code == 201:
             return response.json()
@@ -169,7 +175,7 @@ class ChargesAPI:
 
         :return: None
         """
-        response = requests.get(self.__base_url, auth=self.__auth)
+        response = requests.get(self._base_url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -212,8 +218,8 @@ class ChargesAPI:
         }
 
         filtered_params = {k: v for k, v in params.items() if v is not None}
-        url = f"{self.__base_url}search?" + urlencode(filtered_params)
-        response = requests.get(url, auth=self.__auth)
+        url = f"{self._base_url}search?" + urlencode(filtered_params)
+        response = requests.get(url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -235,8 +241,8 @@ class ChargesAPI:
         :param charge_token: Your charge token
         :return: None
         """
-        url = f"{self.__base_url}{charge_token}/"
-        response = requests.get(url, auth=self.__auth)
+        url = f"{self._base_url}{charge_token}/"
+        response = requests.get(url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -260,8 +266,8 @@ class ChargesAPI:
         :param session_token: Your session token
         :return: None
         """
-        url = f"{self.__base_url}verify?session_token={session_token}"
-        response = requests.get(url, auth=self.__auth)
+        url = f"{self._base_url}verify?session_token={session_token}"
+        response = requests.get(url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -270,7 +276,7 @@ class ChargesAPI:
 
 
 if __name__ == '__main__':
-    charges_api = ChargesAPI()
+    charges_api = Charges()
 
     charges_api.post_charges()
     charges_api.put_charges_charge_token_void()

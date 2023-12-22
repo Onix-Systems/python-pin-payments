@@ -2,10 +2,11 @@ import logging
 from typing import Optional
 
 import requests
-from requests.auth import HTTPBasicAuth
+
+from pin_payments.base import Base
 
 
-class RefundsAPI:
+class Refunds(Base):
     """
     The refunds API allows you to refund charges and retrieve the details of previous refunds.
     """
@@ -13,10 +14,9 @@ class RefundsAPI:
     def __init__(
             self,
             api_key: str,
+            mode: str = 'live'
     ):
-        self.__api_key = api_key
-        self.__base_url = 'https://api.pinpayments.com/1/'
-        self.__auth = HTTPBasicAuth(self.__api_key, '')
+        super().__init__(api_key=api_key, mode=mode)
 
     def get_refunds(
             self
@@ -31,8 +31,8 @@ class RefundsAPI:
 
         :return: None
         """
-        url = f"{self.__base_url}refunds/"
-        response = requests.get(url, auth=self.__auth)
+        url = f"{self._base_url}refunds/"
+        response = requests.get(url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -54,8 +54,8 @@ class RefundsAPI:
         :param refund_token: Refund Token
         :return: None
         """
-        url = f"{self.__base_url}refunds/{refund_token}"
-        response = requests.get(url, auth=self.__auth)
+        url = f"{self._base_url}refunds/{refund_token}"
+        response = requests.get(url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -81,13 +81,13 @@ class RefundsAPI:
         (e.g. cents for AUD, yen for JPY). Default value is the full amount of the charge.
         :return: None
         """
-        url = f"{self.__base_url}charges/{charge_token}/refunds"
+        url = f"{self._base_url}charges/{charge_token}/refunds"
         data = {}
 
         if amount:
             data['amount'] = amount
 
-        response = requests.post(url, auth=self.__auth, data=data)
+        response = requests.post(url, auth=self._auth, data=data)
 
         if response.status_code == 201:
             return response.json()
@@ -109,8 +109,8 @@ class RefundsAPI:
         :param charge_token: Charge Token
         :return: None
         """
-        url = f"{self.__base_url}charges/{charge_token}/refunds"
-        response = requests.get(url, auth=self.__auth)
+        url = f"{self._base_url}charges/{charge_token}/refunds"
+        response = requests.get(url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -119,4 +119,4 @@ class RefundsAPI:
 
 
 if __name__ == '__main__':
-    refunds_api = RefundsAPI()
+    refunds_api = Refunds()

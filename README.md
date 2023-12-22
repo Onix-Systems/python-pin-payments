@@ -5,9 +5,9 @@
 
 The Python-Pin-Payments library is a comprehensive tool designed to interact with the Pin Payments API. It simplifies the process of handling payment operations, including charges, customer management, and refunds. This library encompasses several modules:
 
-- **ChargesAPI**: For creating and managing payment card charges.
-- **CustomersAPI**: To store and manage customer information and their payment details.
-- **RefundsAPI**: Allows refunding charges and retrieving details of previous refunds.
+- **Charges**: For creating and managing payment card charges.
+- **Customers**: To store and manage customer information and their payment details.
+- **Refunds**: Allows refunding charges and retrieving details of previous refunds.
 
 ## Installation using Poetry
 
@@ -65,18 +65,18 @@ poetry install
 Before using the Refunds API, you must configure it with your API key:
 
 ```python
-from pin_payments import RefundsAPI
+from pin_payments import Refunds
 
 api_key = "your-api-key"
-refunds_api = RefundsAPI(api_key=api_key)
+refunds_api = Refunds(api_key=api_key)
 ```
 
 ### Initialization
 
-Instantiate the RefundsAPI class with your secret API key:
+Instantiate the Refunds class with your secret API key:
 
 ```python
-refunds_api = RefundsAPI(api_key="your-secret-api-key")
+refunds_api = Refunds(api_key="your-secret-api-key")
 ```
 
 ## API Usage - Retrieving and Creating Refunds
@@ -220,7 +220,7 @@ Provide links to external resources, such as API documentation, community forums
 
 ### Overview
 
-**ChargesAPI** handles the creation, management, and retrieval of payment card charges. It allows for various operations such as listing all charges, creating new charges, capturing authorized charges, and more.
+**Charges** handles the creation, management, and retrieval of payment card charges. It allows for various operations such as listing all charges, creating new charges, capturing authorized charges, and more.
 
 ### Usage
 
@@ -257,7 +257,7 @@ charges_list = charges_api.get_charges()
 
 ### Overview
 
-**CustomersAPI** is designed for storing and managing customer information and their payment details. It supports multiple operations including creating new customers, updating customer information, and managing their payment methods.
+**Customers** is designed for storing and managing customer information and their payment details. It supports multiple operations including creating new customers, updating customer information, and managing their payment methods.
 
 ### Usage
 
@@ -288,106 +288,3 @@ new_customer = customers_api.post_customers(
 ```python
 customer_details = customers_api.get_customers_customer_token(customer_token="cus_token")
 ```
-
-## Quick API Overview
-
-### Charges API
-
-The charges API allows you to create new payment card charges and retrieve details of previous charges.
-
-`POST	/charges`
-
-Creates a new charge and returns its details
-
-`PUT	/charges/charge-token/void`
-
-Voids a previously authorised charge and returns its details
-
-`PUT	/charges/charge-token/capture`
-Captures a previously authorised charge and returns its details
-
-`GET	/charges`
-
-Returns a paginated list of all charges
-
-`GET	/charges/search`
-
-Returns a paginated list of charges matching the search criteria
-
-`GET	/charges/charge-token`
-
-Returns the details of a charge
-
-`GET	/charges/verify?session_token=session-token`
-
-Verify the result of a 3D Secure enabled charge
-
----
-
-### Customers API
-
-`POST	/customers`	
-
-Creates a new customer and returns its details
-
-`GET	/customers`
-
-Returns a paginated list of all customers
-
-`GET	/customers/customer-token`
-
-Returns the details of a customer
-
-`PUT	/customers/customer-token`
-
-Updates the details of a customer and returns the updated details
-
-`DELETE	/customers/customer-token`
-
-Deletes a customer and all of its cards. You will not be able to recover them
-
-`GET	/customers/customer-token/charges`
-
-Returns a paginated list of a customer’s charges
-
-`GET	/customers/customer-token/cards`
-
-Returns a paginated list of a customer’s cards
-
-`POST	/customers/customer-token/cards`
-
-Creates an additional card for the specified customer and returns its details
-
-`DELETE	/customers/customer-token/cards/card-token`
-
-Deletes a customer’s non-primary card. You will not be able to recover it
-
-`GET	/customers/customer-token/subscriptions`
-
-Retrieves the specified customer's subscriptions
-
-`DELETE	/customers/customer-token/subscriptions/sub-token`
-
-Cancels the subscription identified by subscription token. Subscriptions can only be cancelled if they are in trial or active state
-
----
-
-### Refunds API
-
-`GET	/refunds`
-
-Returns a paginated list of all refunds
-
-`GET	/refunds/refund-token`
-
-Returns the details of the specified refund
-
-`POST	/charges/charge-token/refunds`
-
-Creates a new refund and returns its details
-
-`GET	/charges/charge-token/refunds`
-
-Returns a list of all refunds for the specified charge
-
----

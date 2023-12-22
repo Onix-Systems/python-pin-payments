@@ -2,10 +2,11 @@ import logging
 from typing import Optional
 
 import requests
-from requests.auth import HTTPBasicAuth
+
+from pin_payments.base import Base
 
 
-class CustomersAPI:
+class Customers(Base):
     """
     The customers API allows you to store a customer’s email address and payment card details.
     A customer can then be used with the charges API to create multiple charges over time.
@@ -18,10 +19,10 @@ class CustomersAPI:
     def __init__(
             self,
             api_key: str,
+            mode: str = 'live'
     ):
-        self.__api_key = api_key
-        self.__base_url = 'https://api.pinpayments.com/1/customers/'
-        self.__auth = HTTPBasicAuth(self.__api_key, '')
+        super().__init__(api_key=api_key, mode=mode)
+        self._base_url += 'customers/'
 
     def post_customers(
             self,
@@ -70,7 +71,11 @@ class CustomersAPI:
         :param card_token: The token of the card to be stored, as returned from the cards API or customers API.
         :return: None
         """
-        url = self.__base_url
+        if (
+                card is not None and card_token is not None
+        ):
+            raise ValueError('Use only one of [card, card_token]')
+        url = self._base_url
         data = {'email': email}
 
         # Optional parameters
@@ -92,7 +97,7 @@ class CustomersAPI:
         elif card_token:
             data['card_token'] = card_token
 
-        response = requests.post(url, auth=self.__auth, data=data)
+        response = requests.post(url, auth=self._auth, data=data)
 
         if response.status_code == 201:
             return response.json()
@@ -112,8 +117,8 @@ class CustomersAPI:
 
         :return: None
         """
-        url = self.__base_url
-        response = requests.get(url, auth=self.__auth)
+        url = self._base_url
+        response = requests.get(url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -135,8 +140,8 @@ class CustomersAPI:
         :param customer_token: Token of the customer
         :return: None
         """
-        url = f"{self.__base_url}{customer_token}"
-        response = requests.get(url, auth=self.__auth)
+        url = f"{self._base_url}{customer_token}"
+        response = requests.get(url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -210,7 +215,11 @@ class CustomersAPI:
         primary card, as returned from the cards API or customers API.
         :return: None
         """
-        url = f"{self.__base_url}{customer_token}"
+        if (
+                card is not None and card_token is not None and primary_card_token is not None
+        ):
+            raise ValueError('Use only one of [card, card_token, primary_card_token]')
+        url = f"{self._base_url}{customer_token}"
         data = {}
 
         if email:
@@ -234,7 +243,7 @@ class CustomersAPI:
         if primary_card_token:
             data['primary_card_token'] = primary_card_token
 
-        response = requests.put(url, auth=self.__auth, data=data)
+        response = requests.put(url, auth=self._auth, data=data)
 
         if response.status_code == 200:
             return response.json()
@@ -256,8 +265,8 @@ class CustomersAPI:
         :param customer_token: Token of the customer.
         :return: None
         """
-        url = f"{self.__base_url}{customer_token}"
-        response = requests.delete(url, auth=self.__auth)
+        url = f"{self._base_url}{customer_token}"
+        response = requests.delete(url, auth=self._auth)
 
         if response.status_code == 204:
             return {"message": "Customer deleted successfully."}
@@ -279,8 +288,8 @@ class CustomersAPI:
         :param customer_token: Token of the customer.
         :return: None
         """
-        url = f"{self.__base_url}{customer_token}/charges"
-        response = requests.get(url, auth=self.__auth)
+        url = f"{self._base_url}{customer_token}/charges"
+        response = requests.get(url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -302,8 +311,8 @@ class CustomersAPI:
         :param customer_token: Token of the customer.
         :return: None
         """
-        url = f"{self.__base_url}{customer_token}/cards"
-        response = requests.get(url, auth=self.__auth)
+        url = f"{self._base_url}{customer_token}/cards"
+        response = requests.get(url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -369,7 +378,7 @@ class CustomersAPI:
         as returned from the cards API or customers API.
         :return: None
         """
-        url = f"{self.__base_url}{customer_token}/cards"
+        url = f"{self._base_url}{customer_token}/cards"
         data = {
             "number": number,
             "expiry_month": expiry_month,
@@ -392,7 +401,7 @@ class CustomersAPI:
         if card_token:
             data['card_token'] = card_token
 
-        response = requests.post(url, auth=self.__auth, data=data)
+        response = requests.post(url, auth=self._auth, data=data)
 
         if response.status_code == 201:
             return response.json()
@@ -417,8 +426,8 @@ class CustomersAPI:
         :param card_token: Card token of the customer.
         :return: None
         """
-        url = f"{self.__base_url}{customer_token}/cards/{card_token}"
-        response = requests.delete(url, auth=self.__auth)
+        url = f"{self._base_url}{customer_token}/cards/{card_token}"
+        response = requests.delete(url, auth=self._auth)
 
         if response.status_code == 204:
             return {"message": "Card deleted successfully."}
@@ -441,8 +450,8 @@ class CustomersAPI:
         :param customer_token: Token of the customer.
         :return: None
         """
-        url = f"{self.__base_url}{customer_token}/subscriptions"
-        response = requests.get(url, auth=self.__auth)
+        url = f"{self._base_url}{customer_token}/subscriptions"
+        response = requests.get(url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -468,8 +477,8 @@ class CustomersAPI:
         :param subscription_token: Subscription token of the customer.
         :return: None
         """
-        url = f"{self.__base_url}{customer_token}/subscriptions/{subscription_token}"
-        response = requests.delete(url, auth=self.__auth)
+        url = f"{self._base_url}{customer_token}/subscriptions/{subscription_token}"
+        response = requests.delete(url, auth=self._auth)
 
         if response.status_code == 200:
             return response.json()
@@ -478,4 +487,4 @@ class CustomersAPI:
 
 
 if __name__ == '__main__':
-    customers_api = CustomersAPI()
+    customers_api = Customers()
