@@ -20,7 +20,7 @@ class CustomersAPI:
             api_key: str,
     ):
         self.__api_key = api_key
-        self.__base_url = 'https://api.pinpayments.com/1/charges/'
+        self.__base_url = 'https://api.pinpayments.com/1/customers/'
         self.__auth = HTTPBasicAuth(self.__api_key, '')
 
     def post_customers(

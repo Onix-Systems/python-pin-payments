@@ -16,7 +16,7 @@ class TestRefundsAPI(unittest.TestCase):
         self.assertEqual(self.refunds_api._RefundsAPI__base_url, 'https://api.pinpayments.com/1/')
         self.assertEqual(self.refunds_api._RefundsAPI__auth, HTTPBasicAuth(self.api_key, ''))
 
-    @patch('pin_payments.requests.get')
+    @patch('pin_payments.refunds.requests.get')
     def test_get_refunds_success(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -28,7 +28,7 @@ class TestRefundsAPI(unittest.TestCase):
         self.assertEqual(response, {"refunds": []})
         mock_get.assert_called_once()
 
-    @patch('pin_payments.requests.get')
+    @patch('pin_payments.refunds.requests.get')
     def test_get_refunds_failure(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 400
@@ -40,7 +40,7 @@ class TestRefundsAPI(unittest.TestCase):
         self.assertIn("error", response)
         mock_get.assert_called_once()
 
-    @patch('pin_payments.requests.get')
+    @patch('pin_payments.refunds.requests.get')
     def test_get_refunds_refund_token_success(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -52,7 +52,7 @@ class TestRefundsAPI(unittest.TestCase):
         self.assertEqual(response, {"refund": {"token": "refund_token"}})
         mock_get.assert_called_once()
 
-    @patch('pin_payments.requests.get')
+    @patch('pin_payments.refunds.requests.get')
     def test_get_refunds_refund_token_failure(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 400
@@ -64,7 +64,7 @@ class TestRefundsAPI(unittest.TestCase):
         self.assertIn("error", response)
         mock_get.assert_called_once()
 
-    @patch('pin_payments.requests.post')
+    @patch('pin_payments.refunds.requests.post')
     def test_post_charges_charge_token_refunds_success(self, mock_post):
         mock_response = MagicMock()
         mock_response.status_code = 201
@@ -76,7 +76,7 @@ class TestRefundsAPI(unittest.TestCase):
         self.assertEqual(response, {"refund": {"token": "refund_token"}})
         mock_post.assert_called_once()
 
-    @patch('pin_payments.requests.post')
+    @patch('pin_payments.refunds.requests.post')
     def test_post_charges_charge_token_refunds_failure(self, mock_post):
         mock_response = MagicMock()
         mock_response.status_code = 400
@@ -88,7 +88,7 @@ class TestRefundsAPI(unittest.TestCase):
         self.assertIn("error", response)
         mock_post.assert_called_once()
 
-    @patch('pin_payments.requests.get')
+    @patch('pin_payments.refunds.requests.get')
     def test_get_charges_charge_token_refunds_success(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -100,7 +100,7 @@ class TestRefundsAPI(unittest.TestCase):
         self.assertEqual(response, {"refunds": []})
         mock_get.assert_called_once()
 
-    @patch('pin_payments.requests.get')
+    @patch('pin_payments.refunds.requests.get')
     def test_get_charges_charge_token_refunds_failure(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 400
