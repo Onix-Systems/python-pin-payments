@@ -1,4 +1,3 @@
-import logging
 from typing import Optional
 
 import requests
@@ -75,7 +74,6 @@ class Customers(Base):
                 card is not None and card_token is not None
         ):
             raise ValueError('Use only one of [card, card_token]')
-        url = self._base_url
         data = {'email': email}
 
         # Optional parameters
@@ -97,12 +95,13 @@ class Customers(Base):
         elif card_token:
             data['card_token'] = card_token
 
-        response = requests.post(url, auth=self._auth, data=data)
+        response = requests.post(self._base_url, auth=self._auth, data=data)
 
-        if response.status_code == 201:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Customers.create',
+            required_status_code=201
+        )
 
     def list(
             self
@@ -117,13 +116,13 @@ class Customers(Base):
 
         :return: None
         """
-        url = self._base_url
-        response = requests.get(url, auth=self._auth)
+        response = requests.get(self._base_url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Customers.list',
+            required_status_code=200
+        )
 
     def details(
             self,
@@ -143,10 +142,11 @@ class Customers(Base):
         url = f"{self._base_url}{customer_token}"
         response = requests.get(url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Customers.details',
+            required_status_code=200
+        )
 
     def update(
             self,
@@ -245,10 +245,11 @@ class Customers(Base):
 
         response = requests.put(url, auth=self._auth, data=data)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Customers.update',
+            required_status_code=200
+        )
 
     def delete(
             self,
@@ -268,10 +269,11 @@ class Customers(Base):
         url = f"{self._base_url}{customer_token}"
         response = requests.delete(url, auth=self._auth)
 
-        if response.status_code == 204:
-            return {"message": "Customer deleted successfully."}
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Customers.delete',
+            required_status_code=204
+        )
 
     def list_charges(
             self,
@@ -291,12 +293,13 @@ class Customers(Base):
         url = f"{self._base_url}{customer_token}/charges"
         response = requests.get(url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Customers.list_charges',
+            required_status_code=200
+        )
 
-    def list_card(
+    def list_cards(
             self,
             customer_token: str
     ) -> dict:
@@ -314,10 +317,11 @@ class Customers(Base):
         url = f"{self._base_url}{customer_token}/cards"
         response = requests.get(url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Customers.list_cards',
+            required_status_code=200
+        )
 
     def create_card(
             self,
@@ -409,10 +413,11 @@ class Customers(Base):
 
         response = requests.post(url, auth=self._auth, data=data)
 
-        if response.status_code == 201:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Customers.create_card',
+            required_status_code=201
+        )
 
     def delete_card(
             self,
@@ -435,10 +440,11 @@ class Customers(Base):
         url = f"{self._base_url}{customer_token}/cards/{card_token}"
         response = requests.delete(url, auth=self._auth)
 
-        if response.status_code == 204:
-            return {"message": "Card deleted successfully."}
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Customers.delete_card',
+            required_status_code=204
+        )
 
     def list_subscriptions(
             self,
@@ -459,10 +465,11 @@ class Customers(Base):
         url = f"{self._base_url}{customer_token}/subscriptions"
         response = requests.get(url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Customers.list_subscriptions',
+            required_status_code=200
+        )
 
     def delete_subscriptions(
             self,
@@ -486,10 +493,11 @@ class Customers(Base):
         url = f"{self._base_url}{customer_token}/subscriptions/{subscription_token}"
         response = requests.delete(url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Customers.delete_subscriptions',
+            required_status_code=200
+        )
 
 
 if __name__ == '__main__':

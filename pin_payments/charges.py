@@ -129,8 +129,9 @@ class Charges(Base):
 
         if response.status_code in [201, 202]:
             return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        error_message = f"Error in Charges.create: {response.status_code}, {response.text}"
+        logging.error(error_message)
+        return {"error": error_message}
 
     def void(
             self,
@@ -151,10 +152,11 @@ class Charges(Base):
         url = f"{self._base_url}{charge_token}/void"
         response = requests.put(url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Charges.void',
+            required_status_code=200
+        )
 
     def capture(
             self,
@@ -175,10 +177,11 @@ class Charges(Base):
         url = f"{self._base_url}{charge_token}/capture"
         response = requests.put(url, auth=self._auth)
 
-        if response.status_code == 201:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Charges.capture',
+            required_status_code=201
+        )
 
     def list(self) -> dict:
         """
@@ -193,10 +196,11 @@ class Charges(Base):
         """
         response = requests.get(self._base_url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Charges.list',
+            required_status_code=200
+        )
 
     def search(
             self,
@@ -237,10 +241,11 @@ class Charges(Base):
         url = f"{self._base_url}search?" + urlencode(filtered_params)
         response = requests.get(url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Charges.search',
+            required_status_code=200
+        )
 
     def charge(
             self,
@@ -260,10 +265,11 @@ class Charges(Base):
         url = f"{self._base_url}{charge_token}/"
         response = requests.get(url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Charges.charge',
+            required_status_code=200
+        )
 
     def verify(
             self,
@@ -285,10 +291,11 @@ class Charges(Base):
         url = f"{self._base_url}verify?session_token={session_token}"
         response = requests.get(url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Charges.verify',
+            required_status_code=200
+        )
 
 
 if __name__ == '__main__':

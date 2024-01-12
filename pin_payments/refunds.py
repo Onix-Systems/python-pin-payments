@@ -1,4 +1,3 @@
-import logging
 from typing import Optional
 
 import requests
@@ -34,10 +33,11 @@ class Refunds(Base):
         url = f"{self._base_url}refunds/"
         response = requests.get(url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Refunds.list',
+            required_status_code=200
+        )
 
     def details(
             self,
@@ -57,10 +57,11 @@ class Refunds(Base):
         url = f"{self._base_url}refunds/{refund_token}"
         response = requests.get(url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Refunds.details',
+            required_status_code=200
+        )
 
     def create_refund(
             self,
@@ -89,10 +90,11 @@ class Refunds(Base):
 
         response = requests.post(url, auth=self._auth, data=data)
 
-        if response.status_code == 201:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Refunds.create_refund',
+            required_status_code=201
+        )
 
     def list_charge(
             self,
@@ -112,10 +114,11 @@ class Refunds(Base):
         url = f"{self._base_url}charges/{charge_token}/refunds"
         response = requests.get(url, auth=self._auth)
 
-        if response.status_code == 200:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Refunds.list_charge',
+            required_status_code=200
+        )
 
 
 if __name__ == '__main__':

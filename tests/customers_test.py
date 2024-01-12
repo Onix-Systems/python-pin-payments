@@ -124,11 +124,12 @@ class TestCustomersAPI(unittest.TestCase):
     def test_delete_customers_customer_token_success(self, mock_delete):
         mock_response = MagicMock()
         mock_response.status_code = 204
+        mock_response.json.return_value = {}
         mock_delete.return_value = mock_response
 
         response = self.customers_api.delete(customer_token='cus_token')
 
-        self.assertEqual(response, {"message": "Customer deleted successfully."})
+        self.assertEqual(response, {})
         mock_delete.assert_called_once()
 
     @patch('pin_payments.customers.requests.delete')
@@ -174,7 +175,7 @@ class TestCustomersAPI(unittest.TestCase):
         mock_response.json.return_value = {"cards": []}
         mock_get.return_value = mock_response
 
-        response = self.customers_api.list_card(customer_token='cus_token')
+        response = self.customers_api.list_cards(customer_token='cus_token')
 
         self.assertEqual(response, {"cards": []})
         mock_get.assert_called_once()
@@ -186,7 +187,7 @@ class TestCustomersAPI(unittest.TestCase):
         mock_response.text = BAD_REQUEST_TEXT
         mock_get.return_value = mock_response
 
-        response = self.customers_api.list_card(customer_token='invalid_token')
+        response = self.customers_api.list_cards(customer_token='invalid_token')
 
         self.assertIn("error", response)
         mock_get.assert_called_once()
@@ -239,6 +240,7 @@ class TestCustomersAPI(unittest.TestCase):
     def test_delete_customers_customer_token_cards_card_token_success(self, mock_delete):
         mock_response = MagicMock()
         mock_response.status_code = 204
+        mock_response.json.return_value = {}
         mock_delete.return_value = mock_response
 
         response = self.customers_api.delete_card(
@@ -246,7 +248,7 @@ class TestCustomersAPI(unittest.TestCase):
             card_token='card_token'
         )
 
-        self.assertEqual(response, {"message": "Card deleted successfully."})
+        self.assertEqual(response, {})
         mock_delete.assert_called_once()
 
     @patch('pin_payments.customers.requests.delete')

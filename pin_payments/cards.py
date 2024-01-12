@@ -1,4 +1,3 @@
-import logging
 from typing import Optional
 
 import requests
@@ -86,10 +85,11 @@ class Cards(Base):
 
         response = requests.post(self._base_url, auth=self._auth, data=data)
 
-        if response.status_code == 201:
-            return response.json()
-        logging.error(f"Error: {response.status_code}, {response.text}")
-        return {"error": f"Error: {response.status_code}, {response.text}"}
+        return self._handle_response(
+            response=response,
+            function_name='Cards.create',
+            required_status_code=201
+        )
 
 
 if __name__ == '__main__':
