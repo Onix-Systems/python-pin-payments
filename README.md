@@ -86,7 +86,7 @@ refunds_api = Refunds(api_key="your-secret-api-key")
 To get a paginated list of all refunds:
 
 ```python
-all_refunds = refunds_api.get_refunds()
+all_refunds = refunds_api.list()
 ```
 
 ### Retrieve a Specific Refund
@@ -94,7 +94,7 @@ all_refunds = refunds_api.get_refunds()
 Fetch details of a particular refund using its token:
 
 ```python
-refund_details = refunds_api.get_refunds_refund_token(refund_token="rf_123456789")
+refund_details = refunds_api.details(refund_token="rf_123456789")
 ```
 
 ### Issue a Refund
@@ -102,7 +102,7 @@ refund_details = refunds_api.get_refunds_refund_token(refund_token="rf_123456789
 Create a new refund on a specific charge:
 
 ```python
-new_refund = refunds_api.post_charges_charge_token_refunds(
+new_refund = refunds_api.create_refund(
     charge_token="ch_123456789",
     amount=5000  # Refund amount in the smallest currency unit (e.g., cents for AUD)
 )
@@ -113,7 +113,7 @@ new_refund = refunds_api.post_charges_charge_token_refunds(
 List all refunds made for a specific charge:
 
 ```python
-charge_refunds = refunds_api.get_charges_charge_token_refunds(charge_token="ch_123456789")
+charge_refunds = refunds_api.list_charge(charge_token="ch_123456789")
 ```
 
 ## Error Handling and Logging
@@ -123,11 +123,11 @@ charge_refunds = refunds_api.get_charges_charge_token_refunds(charge_token="ch_1
 The library will return detailed error messages in case of failure. Ensure to handle these errors gracefully in your code:
 
 ```python
-response = refunds_api.get_refunds()
+response = refunds_api.list()
 if 'error' in response:
     logging.error(f"Refund retrieval failed with error: {response['error']}")
 else:
-    # Process successful response
+# Process successful response
 ```
 
 ### Logging
@@ -227,7 +227,7 @@ Provide links to external resources, such as API documentation, community forums
 #### Create a New Charge
 
 ```python
-charge = charges_api.post_charges(
+charge = charges_api.create(
     email="customer@example.com",
     description="Order #1234",
     amount=5000,
@@ -250,7 +250,7 @@ charge = charges_api.post_charges(
 #### Retrieve a List of All Charges
 
 ```python
-charges_list = charges_api.get_charges()
+charges_list = charges_api.list()
 ```
 
 ## Customers API
@@ -264,7 +264,7 @@ charges_list = charges_api.get_charges()
 #### Create a New Customer
 
 ```python
-new_customer = customers_api.post_customers(
+new_customer = customers_api.create(
     email="customer@example.com",
     first_name="Jane",
     last_name="Doe",
@@ -286,5 +286,5 @@ new_customer = customers_api.post_customers(
 #### Retrieve a Customer's Details
 
 ```python
-customer_details = customers_api.get_customers_customer_token(customer_token="cus_token")
+customer_details = customers_api.details(customer_token="cus_token")
 ```

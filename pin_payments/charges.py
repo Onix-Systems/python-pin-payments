@@ -20,7 +20,7 @@ class Charges(Base):
         super().__init__(api_key=api_key, mode=mode)
         self._base_url += 'charges/'
 
-    def post_charges(
+    def create(
             self,
             email: str,
             description: str,
@@ -89,26 +89,42 @@ class Charges(Base):
         :param customer_token: The token of the customer to be charged, as returned from the customers API.
         :return: None
         """
-        if (
-                card is not None and card_token is not None and payment_source_token is not None
-                and customer_token is not None
-        ):
-            raise ValueError('Use only one of [card, card_token, payment_source_token, customer_token]')
+        payment_details = [card, card_token, payment_source_token, customer_token]
+        if sum(detail is not None for detail in payment_details) != 1:
+            raise ValueError(
+                'Only one of the parameters is required '
+                '[card, card_token, payment_source_token, customer_token]')
+
         data = {
             "email": email,
             "description": description,
             "amount": amount,
             "ip_address": ip_address,
-            # TODO think how to add payments deatails here
-            '...': ...,
             "currency": currency,
             "capture": capture,
-            "reference": reference,
-            **({"metadata": metadata} if metadata else {}),
-            **({"three_d_secure": three_d_secure} if three_d_secure else {}),
-            **({"platform_adjustment": platform_adjustment} if platform_adjustment else {})
+            "reference": reference
         }
+
+        if card:
+            for key, value in card.items():
+                data[f'card[{key}]'] = value
+        elif card_token:
+            data['card_token'] = card_token
+        elif payment_source_token:
+            data['payment_source_token'] = payment_source_token
+        elif customer_token:
+            data['customer_token'] = customer_token
+
+        if metadata:
+            for key, value in metadata.items():
+                data[f'metadata[{key}]'] = value
+        if three_d_secure:
+            data['three_d_secure'] = three_d_secure
+        if platform_adjustment:
+            data['platform_adjustment'] = platform_adjustment
+
         data = {k: v for k, v in data.items() if v is not None}
+
         response = requests.post(self._base_url, auth=self._auth, data=data)
 
         if response.status_code in [201, 202]:
@@ -116,7 +132,7 @@ class Charges(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def put_charges_charge_token_void(
+    def void(
             self,
             charge_token: str
     ) -> dict:
@@ -140,7 +156,7 @@ class Charges(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def put_charges_charge_token_capture(
+    def capture(
             self,
             charge_token: str
     ) -> dict:
@@ -164,7 +180,7 @@ class Charges(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def get_charges(self) -> dict:
+    def list(self) -> dict:
         """
         Returns a paginated list of all charges.
 
@@ -182,7 +198,7 @@ class Charges(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def get_charges_search(
+    def search(
             self,
             query: Optional[str] = None,
             start_date: Optional[str] = None,
@@ -226,7 +242,7 @@ class Charges(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def get_charges_charge_token(
+    def charge(
             self,
             charge_token: str
     ) -> dict:
@@ -249,7 +265,7 @@ class Charges(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def get_charges_verify(
+    def verify(
             self,
             session_token: str
     ) -> dict:
@@ -278,10 +294,10 @@ class Charges(Base):
 if __name__ == '__main__':
     charges_api = Charges()
 
-    charges_api.post_charges()
-    charges_api.put_charges_charge_token_void()
-    charges_api.put_charges_charge_token_capture()
-    charges_api.get_charges()
-    charges_api.get_charges_search()
-    charges_api.get_charges_charge_token()
-    charges_api.get_charges_verify()
+    charges_api.create()
+    charges_api.void()
+    charges_api.capture()
+    charges_api.list()
+    charges_api.search()
+    charges_api.charge()
+    charges_api.verify()

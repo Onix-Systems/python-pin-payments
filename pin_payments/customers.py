@@ -24,7 +24,7 @@ class Customers(Base):
         super().__init__(api_key=api_key, mode=mode)
         self._base_url += 'customers/'
 
-    def post_customers(
+    def create(
             self,
             email: str,
             first_name: Optional[str] = None,
@@ -104,7 +104,7 @@ class Customers(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def get_customers(
+    def list(
             self
     ) -> dict:
         """
@@ -125,7 +125,7 @@ class Customers(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def get_customers_customer_token(
+    def details(
             self,
             customer_token: str
     ) -> dict:
@@ -148,7 +148,7 @@ class Customers(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def put_customers_customer_token(
+    def update(
             self,
             customer_token: str,
             email: Optional[str] = None,
@@ -250,7 +250,7 @@ class Customers(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def delete_customers_customer_token(
+    def delete(
             self,
             customer_token: str
     ) -> dict:
@@ -273,7 +273,7 @@ class Customers(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def get_customers_customer_token_charges(
+    def list_charges(
             self,
             customer_token: str
     ) -> dict:
@@ -296,7 +296,7 @@ class Customers(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def get_customers_customer_token_cards(
+    def list_card(
             self,
             customer_token: str
     ) -> dict:
@@ -319,7 +319,7 @@ class Customers(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def post_customers_customer_token_cards(
+    def create_card(
             self,
             customer_token: str,
             number: int,
@@ -378,28 +378,34 @@ class Customers(Base):
         as returned from the cards API or customers API.
         :return: None
         """
-        url = f"{self._base_url}{customer_token}/cards"
-        data = {
-            "number": number,
-            "expiry_month": expiry_month,
-            "expiry_year": expiry_year,
-            "cvc": cvc,
-            "name": name,
-            "address_line1": address_line1,
-            "address_city": address_city,
-            "address_country": address_country
-        }
+        url = f"{self._base_url}/{customer_token}/cards"
 
-        if publishable_api_key:
-            data['publishable_api_key'] = publishable_api_key
-        if address_line2:
-            data['address_line2'] = address_line2
-        if address_postcode:
-            data['address_postcode'] = address_postcode
-        if address_state:
-            data['address_state'] = address_state
+        if card_token and any(
+                [number, expiry_month, expiry_year, cvc, name, address_line1, address_city, address_country]
+        ):
+            raise ValueError("If card_token is passed, other card parameters cannot be passed.")
+
         if card_token:
-            data['card_token'] = card_token
+            data = {"card_token": card_token}
+        else:
+            data = {
+                "number": number,
+                "expiry_month": expiry_month,
+                "expiry_year": expiry_year,
+                "cvc": cvc,
+                "name": name,
+                "address_line1": address_line1,
+                "address_city": address_city,
+                "address_country": address_country
+            }
+            if address_line2:
+                data['address_line2'] = address_line2
+            if address_postcode:
+                data['address_postcode'] = address_postcode
+            if address_state:
+                data['address_state'] = address_state
+            if publishable_api_key:
+                data['publishable_api_key'] = publishable_api_key
 
         response = requests.post(url, auth=self._auth, data=data)
 
@@ -408,7 +414,7 @@ class Customers(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def delete_customers_customer_token_cards_card_token(
+    def delete_card(
             self,
             customer_token: str,
             card_token: str,
@@ -434,7 +440,7 @@ class Customers(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def get_customers_customer_token_subscriptions(
+    def list_subscriptions(
             self,
             customer_token: str
     ) -> dict:
@@ -458,7 +464,7 @@ class Customers(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def delete_customers_customer_token_subscriptions_sub_token(
+    def delete_subscriptions(
             self,
             customer_token: str,
             subscription_token: str

@@ -18,7 +18,7 @@ class Refunds(Base):
     ):
         super().__init__(api_key=api_key, mode=mode)
 
-    def get_refunds(
+    def list(
             self
     ) -> dict:
         """
@@ -39,7 +39,7 @@ class Refunds(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def get_refunds_refund_token(
+    def details(
             self,
             refund_token: str
     ) -> dict:
@@ -62,7 +62,7 @@ class Refunds(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def post_charges_charge_token_refunds(
+    def create_refund(
             self,
             charge_token: str,
             amount: Optional[int] = None
@@ -94,7 +94,7 @@ class Refunds(Base):
         logging.error(f"Error: {response.status_code}, {response.text}")
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
-    def get_charges_charge_token_refunds(
+    def list_charge(
             self,
             charge_token: str
     ) -> dict:
@@ -120,3 +120,7 @@ class Refunds(Base):
 
 if __name__ == '__main__':
     refunds_api = Refunds()
+    refunds_api.create_refund()
+    refunds_api.list()
+    refunds_api.details()
+    refunds_api.list_charge()
