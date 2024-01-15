@@ -8,6 +8,7 @@ exclude =
     *.py[co],
     __pycache__,
     venv,
+    .venv,
     .env,
     settings_default.py,
     urls_default.py,

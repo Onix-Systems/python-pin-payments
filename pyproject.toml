@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "python-pin-payments"
+version = "0.2.0"
+description = ""
+authors = ["Bohdan Salamakha <allen.avanheim@gmail.com>"]
+readme = "README.md"
+packages = [{include = "python_pin_payments"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flake8 = "^6.1.0"
+requests = "^2.31.0"
+
+
+[tool.poetry.group.dev.dependencies]
+commitizen = "^3.13.0"
+
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "poetry"
+update_changelog_on_bump = true
+major_version_zero = true
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
