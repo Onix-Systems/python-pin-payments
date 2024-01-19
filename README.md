@@ -288,3 +288,166 @@ new_customer = customers_api.create(
 ```python
 customer_details = customers_api.details(customer_token="cus_token")
 ```
+
+# Currency Module Documentation
+
+## Overview
+This module is designed for representing and managing various currencies. It includes classes for defining currency codes, their properties like base unit, and minimum transaction amounts.
+
+## Classes
+
+### `CurrencyCode`
+An enumeration representing the codes of available currencies.
+
+#### Attributes:
+- `AUD`: Australian Dollar
+- `USD`: United States Dollar
+- `NZD`: New Zealand Dollar
+- `SGD`: Singaporean Dollar
+- `EUR`: Euro
+- `GBP`: Pound Sterling
+- `CAD`: Canadian Dollar
+- `HKD`: Hong Kong Dollar
+- `JPY`: Japanese Yen
+- `MYR`: Malaysian Ringgit
+- `THB`: Thai Baht
+- `PHP`: Philippine Peso
+- `ZAR`: South African Rand
+- `IDR`: Indonesian Rupiah
+- `TWD`: New Taiwan Dollar
+
+### `Currency`
+A class representing a currency with all its properties.
+
+#### Parameters:
+- `code` (`CurrencyCode`): Currency code.
+- `base_unit` (`str`): Base unit of the currency.
+- `min_amount` (`int`): Minimum amount for a transaction in this currency.
+
+#### Attributes:
+- `code` (`CurrencyCode`): Currency code.
+- `base_unit` (`str`): Base unit of the currency.
+- `min_amount` (`int`): Minimum amount for a transaction.
+
+### `Currencies`
+A class that encapsulates all currencies.
+
+#### Attributes:
+- `AUD`: Currency object for the Australian Dollar.
+- `USD`: Currency object for the United States Dollar.
+- ... (and so on for other currencies).
+
+## Example Usage:
+
+```python
+if __name__ == '__main__':
+    print(
+        f"Code: {Currencies.AUD.code.value}, "
+        f"Base Unit: {Currencies.AUD.base_unit}, "
+        f"Min Amount: {Currencies.AUD.min_amount}"
+    )
+```
+
+# Recipients API Module
+
+## Overview
+The Recipients API module enables storage and retrieval of transfer recipient details. This module facilitates fund transfers to recipients using the transfer API.
+
+## Initialization
+Create an instance of the Recipients class with your API key.
+
+```python
+recipients_api = Recipients(api_key='your-api-key')
+```
+
+## Methods
+
+### create
+Creates a new recipient and returns its details.
+
+```python
+response = recipients_api.create(
+    email='email@example.com',
+    name='Recipient Name',
+    bank_account={
+        'name': 'Recipient Name',
+        'bsb': '123456',
+        'number': '123456789'
+    },
+    bank_account_token='bank_account_token'
+)
+```
+
+**Arguments**:
+- `email` (str): Email address of the recipient.
+- `name` (str, optional): Name for this recipient.
+- `bank_account` (dict, optional): Full details of the bank account to be stored.
+- `bank_account_token` (str, optional): Token of the bank account to be stored.
+
+### list
+Returns a paginated list of all recipients.
+
+```python
+response = recipients_api.list()
+```
+
+### get_details
+Returns the details of a recipient.
+
+```python
+response = recipients_api.get_details(recipient_token='recipient_token')
+```
+
+**Arguments**:
+- `recipient_token` (str): Token of the recipient.
+
+### update
+Updates the details of a recipient and returns its new details.
+
+```python
+response = recipients_api.update(
+    recipient_token='recipient_token',
+    email='new_email@example.com',
+    bank_account={
+        'name': 'New Recipient Name',
+        'bsb': '654321',
+        'number': '987654321'
+    },
+    bank_account_token='new_bank_account_token'
+)
+```
+
+**Arguments**:
+- `recipient_token` (str): Token of the recipient.
+- `email` (str, optional): New email address of the recipient.
+- `bank_account` (dict, optional): New full details of the bank account to be stored.
+- `bank_account_token` (str, optional): New token of the bank account to be stored.
+
+### list_transfers
+Returns a paginated list of a recipient’s transfers.
+
+```python
+response = recipients_api.list_transfers(recipient_token='recipient_token')
+```
+
+**Arguments**:
+- `recipient_token` (str): Token of the recipient.
+
+## Example Usage
+```python
+# Create a new recipient
+recipients_api.create(email="example@email.com")
+
+# List all recipients
+recipients_api.list()
+
+# Get details of a specific recipient
+recipients_api.get_details(recipient_token="your-recipient-token")
+
+# Update a recipient's details
+recipients_api.update(recipient_token="your-recipient-token")
+
+# List transfers for a specific recipient
+recipients_api.list_transfers(recipient_token="your-recipient-token")
+```
+
