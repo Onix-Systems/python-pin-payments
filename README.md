@@ -288,3 +288,106 @@ new_customer = customers_api.create(
 ```python
 customer_details = customers_api.details(customer_token="cus_token")
 ```
+
+
+# Transfers Module Documentation
+
+## Overview
+The `Transfers` module is a part of the Pin Payments API that allows sending money to Australian bank accounts and retrieving details of previous transfers. This module is designed to be used within a broader payment processing system.
+
+## Class: Transfers
+This class provides methods to interact with the Pin Payments Transfers API.
+
+### Initialization
+```python
+transfers_api = Transfers(api_key, mode)
+```
+- `api_key` (str): Your API key for Pin Payments.
+- `mode` (str): Mode of operation, either 'live' or 'test'.
+
+### Methods
+
+#### create
+Create a new transfer.
+```python
+response = transfers_api.create(description, amount, currency, recipient)
+```
+- `description` (str): Description of the transfer.
+- `amount` (int): Amount to transfer in the currency's base unit.
+- `currency` (str): Currency of the transfer.
+- `recipient` (str): Recipient's token or 'self' for own account.
+
+#### list
+List all transfers.
+```python
+response = transfers_api.list()
+```
+
+#### search
+Search transfers with criteria.
+```python
+response = transfers_api.search(query, start_date, end_date, sort, direction)
+```
+- `query` (Optional[str]): Search query.
+- `start_date` (Optional[str]): Start date for filtering.
+- `end_date` (Optional[str]): End date for filtering.
+- `sort` (Optional[str]): Field to sort by.
+- `direction` (Optional[int]): Sort direction.
+
+#### details
+Get details of a specific transfer.
+```python
+response = transfers_api.details(transfer_token)
+```
+- `transfer_token` (str): Token of the transfer.
+
+#### line_items
+Get line items of a specific transfer.
+```python
+response = transfers_api.line_items(transfer_token)
+```
+- `transfer_token` (str): Token of the transfer.
+
+## Usage Example
+```python
+transfers_api = Transfers(api_key='your_api_key')
+transfers_api.create(description='Transfer for service', amount=1000, currency='AUD', recipient='recipient_token')
+transfers_api.list()
+transfers_api.search(query='service')
+transfers_api.details('transfer_token')
+transfers_api.line_items('transfer_token')
+```
+
+
+# Balance API Documentation
+
+## Overview
+The Balance API module provides an interface to view the current balance of funds in your Pin Payments account. It is useful for confirming the availability of funds before initiating transfers.
+
+## Class: Balance
+This class inherits from the Base class and is responsible for interacting with the Pin Payments balance API.
+
+### Initialization
+```python
+balance_api = Balance(api_key: str, mode: str = 'live')
+```
+- `api_key`: Your Pin Payments API key.
+- `mode`: The mode of operation, either 'live' or 'test'.
+
+### Methods
+#### detail()
+This method retrieves the current balance of the Pin Payments account.
+
+```python
+response = balance_api.detail()
+```
+- `Returns`: A dictionary containing the balance details.
+
+#### Example Usage
+```python
+balance_api = Balance(api_key='your_api_key', mode='live')
+balance_details = balance_api.detail()
+print(balance_details)
+```
+
+This will output the current balance details of the Pin Payments account associated with the provided API key.
