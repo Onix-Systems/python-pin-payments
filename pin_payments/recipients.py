@@ -125,10 +125,9 @@ class Recipients(Base):
 
 
 if __name__ == '__main__':
-    recipients_api = Recipients(api_key='your-api-key')
-
-    recipients_api.create(email="example@email.com")
+    recipients_api = Recipients()
+    recipients_api.create()
     recipients_api.list()
-    recipients_api.get_details(recipient_token="your-recipient-token")
-    recipients_api.update(recipient_token="your-recipient-token")
-    recipients_api.list_transfers(recipient_token="your-recipient-token")
+    recipients_api.get_details()
+    recipients_api.update()
+    recipients_api.list_transfers()
