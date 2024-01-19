@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum
 
 
@@ -20,19 +21,12 @@ class CurrencyCode(Enum):
     TWD = "TWD"
 
 
+@dataclass
 class Currency:
-    """A class to represent a currency with all its properties.
-
-    Attributes:
-        code (CurrencyCode): Currency code.
-        base_unit (str): Base unit of currency.
-        min_amount (int): Minimum amount for a transaction in this currency.
-    """
-
-    def __init__(self, code: CurrencyCode, base_unit: str, min_amount: int) -> None:
-        self.code = code
-        self.base_unit = base_unit
-        self.min_amount = min_amount
+    """A class to represent a currency with all its properties."""
+    code: CurrencyCode
+    base_unit: str
+    min_amount: int
 
 
 class Currencies:
