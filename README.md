@@ -552,3 +552,89 @@ print(balance_details)
 ```
 
 This will output the current balance details of the Pin Payments account associated with the provided API key.
+
+# Bank Accounts API
+
+The Bank Accounts API allows for securely storing bank account details in exchange for a bank account token. This API is suitable for scenarios where you need to store bank account details securely and use them in operations like creating recipients.
+
+## Usage
+
+```python
+from pin_payments import BankAccounts
+
+api_key = 'your-api-key'
+bank_accounts_api = BankAccounts(api_key)
+
+response = bank_accounts_api.create(
+    name='John Doe',
+    bsb='123456',
+    number='987654321',
+    publishable_api_key='your-publishable-api-key' # Optional for insecure environments
+)
+
+print(response)
+```
+
+### Method: create
+
+- **Description**: Creates a bank account token and returns its details.
+- **Parameters**:
+  - `name` (str): The account holder's name.
+  - `bsb` (str): The BSB code of the bank account.
+  - `number` (str): The account number of the bank account.
+  - `publishable_api_key` (Optional[str]): Publishable API key for insecure environments.
+- **Returns**: A dictionary with the bank account token and its details.
+
+
+# Deposits API Documentation
+
+## Overview
+The Deposits API allows you to retrieve details of deposits made to your account. It is part of the Pin Payments service.
+
+## Initialization
+```python
+from pin_payments.deposits import Deposits
+
+deposits_api = Deposits(api_key="your_api_key", mode="live")
+```
+
+## Methods
+
+### List All Deposits
+Returns a paginated list of all deposits made to your account.
+```python
+response = deposits_api.list()
+```
+
+### Deposit Details
+Fetches the details of a specific deposit by its token.
+```python
+response = deposits_api.details(deposit_token="your_deposit_token")
+```
+
+## Response Format
+Responses are returned in dictionary format with key-value pairs corresponding to the deposit details.
+
+
+## Events API
+
+The `Events` class in the module provides functionality to interact with the Events API, allowing users to view activities on their account. It supports listing all events and retrieving details of specific events.
+
+### Methods
+
+- `list()`: Returns a paginated list of all events. It performs a `GET` request to the `/events` endpoint and returns a dictionary of the response.
+- `details(event_token: str)`: Retrieves the details of a specified event. It accepts an `event_token` as a parameter and performs a `GET` request to `/events/{event_token}`. The response is returned as a dictionary.
+
+### Usage
+
+To use the `Events` class, initialize it with your API key and optionally specify the mode ('live' or 'test'). Then, call its methods to interact with the API.
+
+```python
+events_api = Events(api_key="your_api_key")
+all_events = events_api.list()
+event_details = events_api.details(event_token="your_event_token")
+```
+
+### Event Types
+
+The module also includes the `EventType` enumeration, providing a comprehensive list of all possible event types that can be encountered, such as `charge.authorised`, `customer.created`, and many more.
