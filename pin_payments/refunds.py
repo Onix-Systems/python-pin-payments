@@ -85,7 +85,7 @@ class Refunds(Base):
         url = f"{self._base_url}charges/{charge_token}/refunds"
         data = {}
 
-        if amount:
+        if amount is not None:
             data['amount'] = amount
 
         response = requests.post(url, auth=self._auth, data=data)

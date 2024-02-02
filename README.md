@@ -553,6 +553,166 @@ print(balance_details)
 
 This will output the current balance details of the Pin Payments account associated with the provided API key.
 
+
+## Plans API
+
+The `Plans` class in the `pin_payments` module provides an interface to create, modify, and examine recurring billing plans using the Pin Payments API.
+
+### Initialization
+```python
+plans_api = Plans(api_key='your_api_key', mode='live')
+```
+- `api_key`: Your secret API key for Pin Payments.
+- `mode`: Mode of operation, either `'live'` or `'test'`. Default is `'live'`.
+
+### Methods
+
+#### `create`
+Creates a new billing plan.
+```python
+response = plans_api.create(
+    name='Plan Name',
+    amount=1000,
+    interval=30,
+    interval_unit='day',
+    currency='AUD',
+    intervals=12,
+    setup_amount=100,
+    trial_amount=0,
+    trial_interval=7,
+    trial_interval_unit='day',
+    customer_permissions=['cancel']
+)
+```
+
+#### `list`
+Returns a paginated list of all plans.
+```python
+response = plans_api.list()
+```
+
+#### `details`
+Retrieves details of a specified plan.
+```python
+response = plans_api.details(plan_token='plan_token')
+```
+
+#### `update`
+Updates a specified plan.
+```python
+response = plans_api.update(
+    plan_token='plan_token',
+    name='New Plan Name',
+    customer_permissions=['cancel']
+)
+```
+
+#### `delete`
+Deletes a specified plan and all of its subscriptions.
+```python
+response = plans_api.delete(plan_token='plan_token')
+```
+
+#### `create_subscription`
+Creates a new subscription to a specified plan.
+```python
+response = plans_api.create_subscription(
+    plan_token='plan_token',
+    customer_token='customer_token',
+    card_token='card_token',
+    include_setup_fee=True
+)
+```
+
+#### `list_subscriptions`
+Lists all subscriptions for a specified plan.
+```python
+response = plans_api.list_subscriptions(plan_token='plan_token')
+```
+
+# Merchants API Documentation
+
+## Overview
+The Merchants API allows you to examine merchants you have referred to us. Access to this API requires a partner API key, available to approved partners.
+
+## Class `Merchants`
+
+### Method: `create`
+- Creates a new referred merchant in the system and returns a confirmation.
+- Parameters:
+  - `contact` (dict): Personal details of the user logging into the merchant entity account.
+  - `entity` (dict): Legal operating details of the merchant entity.
+  - `business` (dict): Business details of the merchant entity.
+  - `bank_account` (dict): Full details of the bank account for fund settlement.
+  - `director` (dict): Details of a person legally responsible for the merchant entity.
+  - `notes` (Optional[str]): Additional information to support the merchant’s application.
+- Example Request:
+  ```python
+  response = merchants_api.create(
+      contact={
+          "first_name": "Roland",
+          "last_name": "Robot",
+          "phone_number": "02 9876 5432",
+          "email": "roland@pinpayments.com",
+          "password": "new-user-password"
+      },
+      entity={
+          "business_registration_number": "11223491505",
+          "full_legal_name": "Roland Robot's coffee robots",
+          "address_line_1": "58 Durham Rd",
+          "address_locality": "Kilsyth",
+          "address_region": "VIC",
+          "address_postal_code": "3137",
+          "address_country_code": "AU"
+      },
+      business={
+          "trading_name": "Roland Robot's coffee robots",
+          "description": "We sell robots that make coffee",
+          "typical_product_price": 1000,
+          "transactions_per_month": 100,
+          "annual_transaction_volume": 1000000,
+          "sells_physical_goods": True,
+          "average_delivery_days": 14,
+          "url": "https://rrcr.net.au"
+      },
+      bank_account={
+          "name": "RRCR",
+          "bsb": "182222",
+          "number": "000111111"
+      },
+      director={
+          "full_name": "Roland Robot",
+          "contact_number": "02 9876 5432",
+          "date_of_birth": "1984-06-12"
+      },
+      notes="Some additional notes here"
+  )
+  ```
+
+### Method: `list`
+- Returns a paginated list of all the merchants referred by you.
+- Example Request:
+  ```python
+  response = merchants_api.list()
+  ```
+
+### Method: `details`
+- Returns the details of a specified merchant referred by you.
+- Parameters:
+  - `merchant_token` (str): Token of the merchant.
+- Example Request:
+  ```python
+  response = merchants_api.details(merchant_token='mrch_roland')
+  ```
+
+### Method: `default_settings`
+- Returns the default settings that will be applied to new merchants referred by you.
+- Example Request:
+  ```python
+  response = merchants_api.default_settings()
+  ```
+
+
 # Bank Accounts API
 
 The Bank Accounts API allows for securely storing bank account details in exchange for a bank account token. This API is suitable for scenarios where you need to store bank account details securely and use them in operations like creating recipients.
@@ -638,3 +798,179 @@ event_details = events_api.details(event_token="your_event_token")
 ### Event Types
 
 The module also includes the `EventType` enumeration, providing a comprehensive list of all possible event types that can be encountered, such as `charge.authorised`, `customer.created`, and many more.
+
+
+## Disputes API Documentation
+
+The `Disputes` class in the `pin_payments` package provides an interface to interact with the Disputes API. This API allows you to retrieve details of disputes against your charges and perform actions to either challenge or accept them.
+
+### Initialization
+
+Before using the Disputes API, initialize the `Disputes` class with your API key.
+
+```python
+from pin_payments import Disputes
+api_key = 'your_api_key'
+disputes_api = Disputes(api_key=api_key)
+```
+
+### Methods
+
+#### List Disputes
+
+Retrieve a paginated list of all disputes, optionally sorted by a specified field in ascending or descending order.
+
+```python
+response = disputes_api.list_disputes(sort='received_at', direction=1)
+```
+
+#### Search Disputes
+
+Search for disputes matching specific criteria such as query term, status, and sorting parameters.
+
+```python
+response = disputes_api.search_disputes(query='chargeback', status='open', sort='amount', direction=-1)
+```
+
+#### Get Dispute Details
+
+Get the details of a specific dispute by providing its unique token.
+
+```python
+dispute_token = 'dis_JRs6Xgk4jMyF33yGijQ7Nw'
+response = disputes_api.get_dispute_details(dispute_token)
+```
+
+#### Get Dispute Activity
+
+Retrieve the activity feed for a specific dispute by its token.
+
+```python
+response = disputes_api.get_dispute_activity(dispute_token)
+```
+
+#### Get Dispute Evidence
+
+Displays the current evidence batch for a specific dispute identified by its token.
+
+```python
+response = disputes_api.get_dispute_evidence(dispute_token)
+```
+
+#### Update Dispute Evidence
+
+Update the evidence batch for a specific dispute. Provide the dispute token and a dictionary of evidence data.
+
+```python
+evidence_data = {'proof_of_delivery_or_service': 'Delivered on 2023-09-25', 'invoice_or_receipt': 'Invoice #123456'}
+response = disputes_api.update_dispute_evidence(dispute_token, evidence_data)
+```
+
+#### Submit Dispute Evidence
+
+Submit the current evidence batch of a specific dispute for review.
+
+```python
+response = disputes_api.submit_dispute_evidence(dispute_token)
+```
+
+#### Accept Dispute
+
+Accept a specific dispute by its token.
+
+```python
+response = disputes_api.accept_dispute(dispute_token)
+```
+
+
+# Webhooks API Documentation
+
+## Overview
+The Webhooks API provided by the `Webhooks` class in `pin_payments` package allows for the management and replay of webhooks. This API is essential for handling requests sent to your webhook endpoints by Pin Payments in response to various events.
+
+## Usage
+
+### Initialization
+To use the Webhooks API, you need to initialize the `Webhooks` class with your API key.
+```python
+from pin_payments import Webhooks
+webhooks_api = Webhooks(api_key="your_api_key")
+```
+
+### Listing All Webhooks
+To retrieve a paginated list of all webhooks:
+```python
+response = webhooks_api.list_webhooks()
+```
+
+### Getting Webhook Details
+To get the details of a specific webhook by its token:
+```python
+response = webhooks_api.get_webhook_details(webhook_token="your_webhook_token")
+```
+
+### Replaying a Webhook
+To replay a webhook:
+```python
+response = webhooks_api.replay_webhook(webhook_token="your_webhook_token")
+```
+This will send a request to the URL of the webhook again, useful for testing or in case of errors.
+
+
+
+## Webhook Endpoints API Documentation
+
+### Overview
+The `WebhookEndpoints` class in the `pin_payments` package provides methods for managing webhook endpoints in the Pin Payments API. Webhook endpoints are URLs that Pin Payments requests when events occur on your account.
+
+### Initialization
+```python
+from pin_payments import WebhookEndpoints
+
+api_key = 'your_api_key'
+webhook_endpoints_api = WebhookEndpoints(api_key)
+```
+
+### Methods
+
+#### Create Webhook Endpoint
+Create a new webhook endpoint and return its details.
+
+- **Method**: `create_webhook_endpoint(url)`
+- **Arguments**:
+  - `url`: The destination URL of the webhook endpoint.
+
+```python
+response = webhook_endpoints_api.create_webhook_endpoint(url='https://example.org/webhooks/')
+```
+
+#### List Webhook Endpoints
+Return a paginated list of all webhook endpoints.
+
+- **Method**: `list_webhook_endpoints()`
+
+```python
+response = webhook_endpoints_api.list_webhook_endpoints()
+```
+
+#### Get Webhook Endpoint Details
+Return the details of a specific webhook endpoint.
+
+- **Method**: `get_webhook_endpoint_details(webhook_endpoint_token)`
+- **Arguments**:
+  - `webhook_endpoint_token`: Token of the webhook endpoint.
+
+```python
+response = webhook_endpoints_api.get_webhook_endpoint_details(webhook_endpoint_token='token_here')
+```
+
+#### Delete Webhook Endpoint
+Delete a webhook endpoint and all of its webhook requests.
+
+- **Method**: `delete_webhook_endpoint(webhook_endpoint_token)`
+- **Arguments**:
+  - `webhook_endpoint_token`: Token of the webhook endpoint to be deleted.
+
+```python
+response = webhook_endpoints_api.delete_webhook_endpoint(webhook_endpoint_token='token_here')
+```

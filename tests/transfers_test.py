@@ -65,11 +65,7 @@ class TestTransfersAPI(unittest.TestCase):
             f"{self.transfers_api._base_url}search",
             auth=HTTPBasicAuth(self.api_key, ''),
             params={
-                'query': 'Test',
-                'start_date': None,
-                'end_date': None,
-                'sort': None,
-                'direction': None
+                'query': 'Test'
             }
         )
 
