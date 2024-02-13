@@ -85,6 +85,7 @@ class Transfers(Base):
             "sort": sort,
             "direction": direction
         }
+        params = {k: v for k, v in params.items() if v is not None}
         response = requests.get(
             f"{self._base_url}search",
             auth=self._auth, params=params

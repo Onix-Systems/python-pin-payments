@@ -4,6 +4,7 @@ from urllib.parse import urlencode
 
 import requests
 
+from config import get_api_key, get_test_card_dict
 from pin_payments.base import Base
 
 
@@ -299,12 +300,27 @@ class Charges(Base):
 
 
 if __name__ == '__main__':
-    charges_api = Charges()
+    charges_api = Charges(api_key=get_api_key(), mode='test')
 
-    charges_api.create()
-    charges_api.void()
-    charges_api.capture()
-    charges_api.list()
-    charges_api.search()
-    charges_api.charge()
-    charges_api.verify()
+    res1 = charges_api.create(
+        email='test@gmail.com',
+        description='test',
+        amount=400,
+        ip_address='ip...',
+        card=get_test_card_dict()
+    )
+    print(res1)
+    charge_token_ = res1['response']['token']
+    res4 = charges_api.list()
+    print(res4)
+    res5 = charges_api.search()
+    print(res5)
+    res6 = charges_api.charge(charge_token_)
+    print(res6)
+    res2 = charges_api.void(charge_token_)
+    print(res2)
+    res3 = charges_api.capture(charge_token_)
+    print(res3)
+    # NEEDS 3D SECURE SESSION TOKEN
+    # res7 = charges_api.verify()
+    # print(res7)

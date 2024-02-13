@@ -33,7 +33,7 @@ class Base:
         :return: Dictionary with response or error data.
         """
         if response.status_code == required_status_code:
-            return response.json()
+            return response.json() if response.text else ""
         error_message = f"Error in {function_name}: {response.status_code}, {response.text}"
         logging.error(error_message)
         return {"error": error_message}
