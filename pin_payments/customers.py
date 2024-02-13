@@ -2,6 +2,7 @@ from typing import Optional
 
 import requests
 
+from config import get_api_key, get_test_card_dict
 from pin_payments.base import Base
 
 
@@ -501,4 +502,19 @@ class Customers(Base):
 
 
 if __name__ == '__main__':
-    customers_api = Customers()
+    customers_api = Customers(api_key=get_api_key(), mode='test')
+    res1 = customers_api.create(
+        email='test@gmail.com',
+        card=get_test_card_dict()
+    )
+    print(res1)
+    # customers_api.list()
+    # customers_api.details()
+    # customers_api.update()
+    # customers_api.delete()
+    # customers_api.list_charges()
+    # customers_api.list_cards()
+    # customers_api.create_card()
+    # customers_api.delete_card()
+    # customers_api.list_subscriptions()
+    # customers_api.delete_subscriptions()

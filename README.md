@@ -1,4 +1,3 @@
-
 # Python-Pin-Payments Library
 
 ## Overview
@@ -70,6 +69,11 @@ from pin_payments import Refunds
 api_key = "your-api-key"
 refunds_api = Refunds(api_key=api_key)
 ```
+
+### Test Purposes (devs only)
+create `.env` file
+set up the `API_KEY` to write it to the environment
+
 
 ### Initialization
 
@@ -974,3 +978,366 @@ Delete a webhook endpoint and all of its webhook requests.
 ```python
 response = webhook_endpoints_api.delete_webhook_endpoint(webhook_endpoint_token='token_here')
 ```
+
+
+# Authorisations API
+
+The Authorisations API provides a robust solution for managing payment card authorisations, including creating new authorisations, retrieving details of previous ones, voiding existing authorisations, and capturing authorised funds. This API is designed to streamline the payment process, ensuring secure and efficient transactions.
+
+## Initialization
+
+To use the Authorisations API, initialize it with your API key and the desired mode (`live` or `test` for sandbox testing):
+
+```python
+from authorisations import Authorisations
+
+api_key = "your_api_key_here"
+authorisations_api = Authorisations(api_key=api_key, mode='test')
+```
+
+## Creating a New Authorisation
+
+Create a new payment card authorisation by providing details such as the purchaser's email, a description of the item purchased, the amount, and the IP address:
+
+```python
+response = authorisations_api.create_authorisation(
+    email="purchaser@example.com",
+    description="500g of single origin coffee beans",
+    amount=2500,
+    ip_address="203.0.113.0",
+    currency="AUD", 
+    card={
+        "number": "5520000000000000",
+        "expiry_month": "05",
+        "expiry_year": "2025",
+        "cvc": "123",
+        "name": "Jane Doe",
+        "address_line1": "123 Main St",
+        "address_city": "Anytown",
+        "address_postcode": "12345",
+        "address_state": "State",
+        "address_country": "Country"
+    }
+    # Alternatively, use card_token or customer_token if available
+)
+```
+
+## Voiding an Authorisation
+
+To void a previously created authorisation:
+
+```python
+response = authorisations_api.void_authorisation(auth_token="auth_token_here")
+```
+
+## Capturing Authorised Funds
+
+Capture the authorised funds with the specific amount:
+
+```python
+response = authorisations_api.capture_authorisation(
+    auth_token="auth_token_here",
+    amount=1500
+)
+```
+
+## Listing All Authorisations
+
+Retrieve a paginated list of all authorisations:
+
+```python
+response = authorisations_api.list_authorisations()
+```
+
+## Getting Authorisation Details
+
+Retrieve the details of a specific authorisation by its token:
+
+```python
+response = authorisations_api.get_authorisation_details(auth_token="auth_token_here")
+```
+
+
+# Subscriptions API
+
+The Subscriptions API facilitates the management of subscription services, allowing for the creation of new subscriptions, retrieval of subscription details, updating subscription information, reactivation of subscriptions, and cancellation of active or trial subscriptions. This comprehensive API is designed to integrate seamlessly with your existing payment and subscription management systems.
+
+## Getting Started
+
+First, initialize the Subscriptions API with your API key and the desired operation mode (`live` or `test`):
+
+```python
+from subscriptions import Subscriptions
+
+api_key = "your_secret_api_key"
+subscriptions_api = Subscriptions(api_key=api_key, mode='test')
+```
+
+## Create a New Subscription
+
+To activate a new subscription, provide the plan token, customer token, and whether to include the setup fee:
+
+```python
+response = subscriptions_api.create_subscription(
+    plan_token='plan_token_here',
+    customer_token='customer_token_here',
+    include_setup_fee=True
+)
+```
+
+## List All Subscriptions
+
+Retrieve a paginated list of all subscriptions:
+
+```python
+response = subscriptions_api.list_subscriptions()
+```
+
+## Get Subscription Details
+
+Fetch the details of a specific subscription using its subscription token:
+
+```python
+sub_token = 'subscription_token_here'
+response = subscriptions_api.get_subscription_details(sub_token)
+```
+
+## Update a Subscription
+
+Update the card associated with a specific subscription:
+
+```python
+sub_token = 'subscription_token_here'
+card_token = 'new_card_token_here'
+response = subscriptions_api.update_subscription(sub_token, card_token)
+```
+
+## Cancel a Subscription
+
+Cancel an active or trial subscription:
+
+```python
+sub_token = 'subscription_token_here'
+response = subscriptions_api.cancel_subscription(sub_token)
+```
+
+## Reactivate a Subscription
+
+Reactivate a previously canceled subscription:
+
+```python
+sub_token = 'subscription_token_here'
+response = subscriptions_api.reactivate_subscription(sub_token, include_setup_fee=True)
+```
+
+## Fetch Subscription Ledger
+
+Retrieve ledger entries related to a specific subscription:
+
+```python
+sub_token = 'subscription_token_here'
+response = subscriptions_api.fetch_subscription_ledger(sub_token)
+```
+
+
+## Files API Documentation
+
+The Files API provides functionalities for managing file uploads within your application. It supports operations such as uploading new files, retrieving details about uploaded files, and deleting files by their tokens.
+
+### Uploading a New File
+
+To upload a new file, use the `upload_file` method. This method requires the local path to the file you wish to upload and the purpose of the file upload, such as 'dispute_evidence'.
+
+```python
+response = files_api.upload_file('/path/to/your/file.jpeg', 'dispute_evidence')
+```
+
+### Retrieving File Details
+
+To retrieve details about an uploaded file, use the `get_file_details` method with the file token.
+
+```python
+file_token = 'file_M3wowEURfIpSQI6xCEoamQ'
+response = files_api.get_file_details(file_token)
+```
+
+### Deleting a File
+
+To delete an uploaded file, use the `delete_file` method with the file token.
+
+```python
+file_token = 'file_M3wowEURfIpSQI6xCEoamQ'
+response = files_api.delete_file(file_token)
+```
+
+
+# Apple Pay API Documentation
+
+## Overview
+The `ApplePayAPI` class provides methods to manage Apple Pay merchant domains and sessions, including creating, listing, and deleting domains, checking domain registration, creating Apple Pay sessions, and managing Apple Pay certificates.
+
+## Initialization
+```python
+from apple_pay_api import ApplePayAPI
+apple_pay_api = ApplePayAPI(api_key="your_api_key", mode="test")
+```
+
+## Create Domain
+Registers a new domain for Apple Pay.
+```python
+response = apple_pay_api.create_domain(domain_name="example.com")
+```
+
+## List Domains
+Retrieves a list of all registered Apple Pay domains.
+```python
+response = apple_pay_api.list_domains()
+```
+
+## Delete Domain
+Deletes a registered Apple Pay domain.
+```python
+response = apple_pay_api.delete_domain(domain_token="domain_token_here")
+```
+
+## Check Host
+Checks if an Apple Pay domain is registered.
+```python
+response = apple_pay_api.check_host(domain_name="example.com")
+```
+
+## Create Session
+Creates an Apple Pay session.
+```python
+response = apple_pay_api.create_session(
+    validation_url="validation_url_here",
+    initiative="web",
+    initiative_context="example.com"
+)
+```
+
+## Create Certificate
+Creates a new Apple Pay certificate.
+```python
+response = apple_pay_api.create_certificate()
+```
+
+## List Certificates
+Retrieves a list of all Apple Pay certificates.
+```python
+response = apple_pay_api.list_certificates()
+```
+
+## Get Certificate
+Retrieves details of a specific Apple Pay certificate.
+```python
+response = apple_pay_api.get_certificate(certificate_token="certificate_token_here")
+```
+
+## Upload Certificate
+Uploads an Apple Pay payment processing certificate.
+```python
+response = apple_pay_api.upload_certificate(certificate_pem="certificate_pem_here")
+```
+
+## Delete Certificate
+Deletes an Apple Pay certificate.
+```python
+response = apple_pay_api.delete_certificate(certificate_token="certificate_token_here")
+```
+
+
+## Payment Sources API Integration
+
+The Payment Sources API module allows for the secure storage of payment source details, returning a token that can be used for creating charges. This is crucial for handling different types of payment sources like cards, Apple Pay, Google Pay, and network tokens.
+
+### Initialization
+To use the Payment Sources API, initialize the `PaymentSources` class with your API key and the desired mode ('live' or 'test').
+```python
+from payment_sources import PaymentSources
+payment_sources_api = PaymentSources(api_key="your_api_key", mode="test")
+```
+
+### Creating a Payment Source
+You can store payment source details by calling the `create_payment_source` method. This method accepts the type of payment source (`card`, `applepay`, `googlepay`, `network_token`), the source details as a dictionary, and optionally, a publishable API key for requests from insecure environments.
+
+#### Example: Creating a Card Payment Source
+```python
+card_details = {
+    "number": "5520000000000000",
+    "expiry_month": "05",
+    "expiry_year": "2025",
+    "cvc": "123",
+    "name": "Roland Robot",
+    "address_line1": "42 Sevenoaks St",
+    "address_city": "Lathlain",
+    "address_postcode": "6454",
+    "address_state": "WA",
+    "address_country": "Australia"
+}
+response = payment_sources_api.create_payment_source("card", card_details)
+```
+
+#### Example: Creating an Apple Pay Payment Source
+```python
+apple_pay_details = {
+    "data": "encrypted_data",
+    "signature": "signature_value",
+    "header": {
+        "publicKeyHash": "hash_value",
+        "ephemeralPublicKey": "public_key",
+        "transactionId": "transaction_id"
+    },
+    "version": "EC_v1"
+}
+response = payment_sources_api.create_payment_source("applepay", apple_pay_details)
+```
+
+
+# Charge Service Module Documentation (Test Cards on pinpayments)
+
+## Overview
+This module provides a simple interface for simulating transactions with different types of test credit cards. It allows the simulation of various scenarios such as successful transactions, declined transactions, insufficient funds, invalid CVV, and more.
+
+## Classes
+- `CardType`: An enumeration of possible types of card responses.
+- `TestCard`: Represents a test card with a specific card number and type.
+- `TestCards`: A collection of predefined test cards.
+- `ChargeService`: A service to create charges with test cards.
+
+## Usage
+
+### Creating a Charge
+To create a charge, you can use the `ChargeService.create_charge` method. This method requires a card number and an amount. It returns a dictionary with the transaction result.
+
+```python
+from charge_service import ChargeService
+
+card_number = "4200000000000000"
+amount = 100
+
+response = ChargeService.create_charge(card_number, amount)
+```
+
+### Handling Different Card Types
+You can simulate different outcomes by using different card numbers. Here are some examples:
+
+- **Successful Transaction**:
+  - Card Number: `"4200000000000000"`
+  - Response: `{'success': True, 'token': 'ch_lfUYEBK14zotCTykezJkfg', 'amount': amount}`
+
+- **Declined Transaction**:
+  - Card Number: `"4100000000000001"`
+  - Response: `{'error': 'declined', 'error_description': 'The card was declined', 'charge_token': 'ch_lfUYEBK14zotCTykezJkfg'}`
+
+- **Insufficient Funds**:
+  - Card Number: `"4000000000000002"`
+  - Response: `{'error': 'insufficient_funds', 'error_description': 'There are not enough funds available to process the requested amount', 'charge_token': 'ch_lfUYEBK14zotCTykezJkfg'}`
+
+### Error Descriptions
+The `TestCards.get_error_description` static method provides a human-readable description of the error based on the card type.
+
+## Test Cards
+The module includes a variety of test cards for different scenarios. Each card is associated with a specific behavior, such as being declined, having insufficient funds, etc.
+
+For a full list of test cards and their behaviors, please refer to the `TestCards.cards` list within the module.
