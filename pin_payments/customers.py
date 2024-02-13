@@ -327,14 +327,15 @@ class Customers(Base):
     def create_card(
             self,
             customer_token: str,
-            number: int,
-            expiry_month: int,
-            expiry_year: int,
-            cvc: int,
-            name: str,
-            address_line1: str,
-            address_city: str,
-            address_country: str,
+            number: Optional[int] = None,
+            expiry_month: Optional[int] = None,
+            expiry_year: Optional[int] = None,
+            cvc: Optional[int] = None,
+            name: Optional[str] = None,
+            address_line1: Optional[str] = None,
+            address_city: Optional[str] = None,
+            address_country: Optional[str] = None,
+            # true optional values
             publishable_api_key: Optional[str] = None,
             address_line2: Optional[str] = None,
             address_postcode: Optional[int] = None,
@@ -392,6 +393,11 @@ class Customers(Base):
 
         if card_token:
             data = {"card_token": card_token}
+        elif None in [number, expiry_month, expiry_year, cvc, name, address_line1, address_city, address_country]:
+            raise ValueError(
+                "You should pass every parameter "
+                "[number, expiry_month, expiry_year, cvc, name, address_line1, address_city, address_country]."
+            )
         else:
             data = {
                 "number": number,
@@ -508,13 +514,38 @@ if __name__ == '__main__':
         card=get_test_card_dict()
     )
     print(res1)
-    # customers_api.list()
-    # customers_api.details()
-    # customers_api.update()
-    # customers_api.delete()
-    # customers_api.list_charges()
-    # customers_api.list_cards()
-    # customers_api.create_card()
-    # customers_api.delete_card()
-    # customers_api.list_subscriptions()
-    # customers_api.delete_subscriptions()
+    customer_token = res1['response']['token']
+    res2 = customers_api.list()
+    print(res2)
+    res3 = customers_api.details(customer_token)
+    print(res3)
+    res4 = customers_api.update(customer_token=customer_token, card=get_test_card_dict())
+    print(res4)
+    res6 = customers_api.list_charges(customer_token=customer_token)
+    print(res6)
+    res7 = customers_api.list_cards(customer_token=customer_token)
+    print(res7)
+    res8 = customers_api.create_card(
+        customer_token=customer_token,
+        number=get_test_card_dict()['number'],
+        expiry_month=get_test_card_dict()['expiry_month'],
+        expiry_year=get_test_card_dict()['expiry_year'],
+        cvc=get_test_card_dict()['cvc'],
+        name=get_test_card_dict()['name'],
+        address_line1=get_test_card_dict()['address_line1'],
+        address_city=get_test_card_dict()['address_city'],
+        address_country=get_test_card_dict()['address_country'],
+    )
+    print(res8)
+    card_token = res8['response']['token']
+    res10 = customers_api.list_subscriptions(customer_token=customer_token)
+    print(res10)
+    res11 = customers_api.delete_subscriptions(
+        customer_token=customer_token,
+        subscription_token='subscription_token'
+    )
+    print(res11)
+    res5 = customers_api.delete(customer_token=customer_token)
+    print(res5)
+    res9 = customers_api.delete_card(customer_token=customer_token, card_token=card_token)
+    print(res9)

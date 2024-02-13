@@ -306,21 +306,21 @@ if __name__ == '__main__':
         email='test@gmail.com',
         description='test',
         amount=400,
-        ip_address='203.192.1.172',
+        ip_address='ip...',
         card=get_test_card_dict()
     )
     print(res1)
     charge_token_ = res1['response']['token']
-    res2 = charges_api.void(charge_token_)
-    print(res2)
-    res3 = charges_api.capture(charge_token_)
-    print(res3)
     res4 = charges_api.list()
     print(res4)
     res5 = charges_api.search()
     print(res5)
     res6 = charges_api.charge(charge_token_)
     print(res6)
+    res2 = charges_api.void(charge_token_)
+    print(res2)
+    res3 = charges_api.capture(charge_token_)
+    print(res3)
     # NEEDS 3D SECURE SESSION TOKEN
     # res7 = charges_api.verify()
     # print(res7)
