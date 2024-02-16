@@ -2,6 +2,7 @@ from typing import Optional
 
 import requests
 
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -122,8 +123,20 @@ class Refunds(Base):
 
 
 if __name__ == '__main__':
-    refunds_api = Refunds()
-    refunds_api.create_refund()
-    refunds_api.list()
-    refunds_api.details()
-    refunds_api.list_charge()
+    refunds_api = Refunds(api_key=get_api_key(), mode="test")
+
+    all_refunds = refunds_api.list()
+    print("All Refunds:", all_refunds)
+
+    refund_token = 'refund_token_example'
+    refund_details = refunds_api.details(refund_token=refund_token)
+    print(f"Details of Refund {refund_token}:", refund_details)
+
+    charge_token_for_refund = "your_charge_token"
+    refund_amount = 100
+
+    refund_creation_result = refunds_api.create_refund(charge_token=charge_token_for_refund, amount=refund_amount)
+    print("Refund Creation Result:", refund_creation_result)
+
+    refunds_for_charge = refunds_api.list_charge(charge_token=charge_token_for_refund)
+    print(f"All Refunds for Charge {charge_token_for_refund}:", refunds_for_charge)

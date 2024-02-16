@@ -103,4 +103,66 @@ class Merchants(Base):
 
 
 if __name__ == '__main__':
-    merchants_api = Merchants()
+    # Access requires a partner API key
+    PARTNER_API_KEY = ...
+    merchants_api = Merchants(api_key=PARTNER_API_KEY, mode='test')
+
+    contact = {
+        "first_name": "Roland",
+        "last_name": "Robot",
+        "phone_number": "02 9876 5432",
+        "email": "roland@pinpayments.com",
+        "password": "new-user-password"
+    }
+    entity = {
+        "business_registration_number": "11223491505",
+        "full_legal_name": "Roland Robot's coffee robots",
+        "address_line_1": "58 Durham Rd",
+        "address_line_2": "",
+        "address_locality": "Kilsyth",
+        "address_region": "VIC",
+        "address_postal_code": "3137",
+        "address_country_code": "AU"
+    }
+    business = {
+        "trading_name": "Roland Robot's coffee robots",
+        "description": "We sell robots that make coffee",
+        "typical_product_price": "1000",
+        "transactions_per_month": "100",
+        "annual_transaction_volume": "1000000",
+        "sells_physical_goods": True,
+        "average_delivery_days": "14",
+        "url": "https://rrcr.net.au"
+    }
+    bank_account = {
+        "name": "RRCR",
+        "bsb": "182222",
+        "number": "000111111"
+    }
+    director = {
+        "full_name": "Roland Robot",
+        "contact_number": "02 9876 5432",
+        "date_of_birth": "1984-06-12"
+    }
+    notes = "This is a test merchant created via API."
+
+    create_response = merchants_api.create(
+        contact=contact,
+        entity=entity,
+        business=business,
+        bank_account=bank_account,
+        director=director,
+        notes=notes
+    )
+    print("Create Merchant Response:", create_response)
+
+    list_response = merchants_api.list()
+    print("List Merchants Response:", list_response)
+
+    merchant_token = 'example-merchant-token'
+
+    details_response = merchants_api.details(merchant_token=merchant_token)
+    print("Merchant Details Response:", details_response)
+
+    default_settings_response = merchants_api.default_settings()
+    print("Default Settings Response:", default_settings_response)

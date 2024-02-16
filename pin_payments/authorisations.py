@@ -2,6 +2,7 @@ from typing import Optional
 
 import requests
 
+from config import get_api_key, get_test_card_dict
 from pin_payments.base import Base
 
 
@@ -77,8 +78,7 @@ class Authorisations(Base):
         if metadata:
             for key, value in metadata.items():
                 data[f'metadata[{key}]'] = value
-
-        response = requests.post(self._base_url, auth=self._api_key, data=data)
+        response = requests.post(self._base_url, auth=self._auth, data=data)
         return self._handle_response(
             response=response,
             function_name='create_authorisation',
@@ -93,7 +93,7 @@ class Authorisations(Base):
         :return: A dictionary containing the response data.
         """
         url = f'{self._base_url}{auth_token}/void'
-        response = requests.put(url, auth=self._api_key)
+        response = requests.put(url, auth=self._auth)
         return self._handle_response(
             response=response,
             function_name='void_authorisation',
@@ -110,7 +110,7 @@ class Authorisations(Base):
         """
         url = f'{self._base_url}{auth_token}/charges'
         data = {'amount': amount}
-        response = requests.post(url, auth=self._api_key, data=data)
+        response = requests.post(url, auth=self._auth, data=data)
         return self._handle_response(
             response=response,
             function_name='capture_authorisation',
@@ -123,7 +123,7 @@ class Authorisations(Base):
 
         :return: A dictionary containing the response data.
         """
-        response = requests.get(self._base_url, auth=self._api_key)
+        response = requests.get(self._base_url, auth=self._auth)
         return self._handle_response(
             response=response,
             function_name='list_authorisations',
@@ -138,9 +138,37 @@ class Authorisations(Base):
         :return: A dictionary containing the response data.
         """
         url = f'{self._base_url}{auth_token}'
-        response = requests.get(url, auth=self._api_key)
+        response = requests.get(url, auth=self._auth)
         return self._handle_response(
             response=response,
             function_name='get_authorisation_details',
             required_status_code=200
         )
+
+
+if __name__ == '__main__':
+    authorisations_api = Authorisations(api_key=get_api_key(), mode='test')
+
+    new_authorisation = authorisations_api.create_authorisation(
+        email="customer@example.com",
+        description="Test Authorisation",
+        amount=1000,
+        ip_address="127.0.0.1",
+        currency="AUD",
+        card=get_test_card_dict()
+    )
+    print("Created Authorisation:", new_authorisation)
+
+    auth_token = "your_authorisation_token_here"
+
+    void_result = authorisations_api.void_authorisation(auth_token)
+    print("Voided Authorisation:", void_result)
+
+    capture_result = authorisations_api.capture_authorisation(auth_token, 1000)  # capturing the same amount
+    print("Captured Authorisation:", capture_result)
+
+    all_authorisations = authorisations_api.list_authorisations()
+    print("All Authorisations:", all_authorisations)
+
+    authorisation_details = authorisations_api.get_authorisation_details(auth_token)
+    print("Authorisation Details:", authorisation_details)

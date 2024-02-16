@@ -360,6 +360,8 @@ The Recipients API module enables storage and retrieval of transfer recipient de
 ## Initialization
 Create an instance of the Recipients class with your API key.
 
+The bank account should be valid.
+
 ```python
 recipients_api = Recipients(api_key='your-api-key')
 ```

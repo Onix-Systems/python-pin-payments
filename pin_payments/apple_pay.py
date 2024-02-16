@@ -1,5 +1,6 @@
 import requests
 
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -179,3 +180,47 @@ class ApplePayAPI(Base):
             'delete_certificate',
             204
         )
+
+
+if __name__ == '__main__':
+    apple_pay_api = ApplePayAPI(api_key=get_api_key(), mode='test')
+
+    domain_name = 'example.com'
+    domain_registration_response = apple_pay_api.create_domain(domain_name=domain_name)
+    print("Domain Registration Response:", domain_registration_response)
+
+    domains_list_response = apple_pay_api.list_domains()
+    print("Domains List Response:", domains_list_response)
+
+    domain_token = 'domain_token_example'
+
+    delete_domain_response = apple_pay_api.delete_domain(domain_token=domain_token)
+    print("Delete Domain Response:", delete_domain_response)
+
+    validation_url = 'https://example.com'
+    initiative = 'web'
+    initiative_context = 'example.com'
+    session_response = apple_pay_api.create_session(
+        validation_url=validation_url,
+        initiative=initiative,
+        initiative_context=initiative_context
+    )
+    print("Session Response:", session_response)
+
+    certificate_response = apple_pay_api.create_certificate()
+    print("Certificate Response:", certificate_response)
+
+    certificates_list_response = apple_pay_api.list_certificates()
+    print("Certificates List Response:", certificates_list_response)
+
+    certificate_token = certificates_list_response.get('response')[0].get('token')
+
+    certificate_details_response = apple_pay_api.get_certificate(
+        certificate_token=certificate_token)
+    print("Certificate Details Response:", certificate_details_response
+          )
+
+    delete_certificate_response = apple_pay_api.delete_certificate(
+        certificate_token=certificate_token
+    )
+    print("Delete Certificate Response:", delete_certificate_response)

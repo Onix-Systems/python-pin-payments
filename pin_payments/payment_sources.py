@@ -2,6 +2,7 @@ from typing import Optional
 
 import requests
 
+from config import get_api_key, get_test_card_dict
 from pin_payments.base import Base
 
 
@@ -58,5 +59,11 @@ class PaymentSources(Base):
         )
 
 
-if __name__ == "__main__":
-    payment_sources_api = PaymentSources(..., "test")
+if __name__ == '__main__':
+    payment_sources_api = PaymentSources(api_key=get_api_key(), mode='test')
+
+    payment_source = payment_sources_api.create_payment_source(
+        source_type='card',
+        source=get_test_card_dict()
+    )
+    print(payment_source)

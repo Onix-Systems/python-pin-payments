@@ -1,5 +1,6 @@
 import requests
 
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -69,4 +70,21 @@ class WebhookEndpoints(Base):
 
 
 if __name__ == '__main__':
-    webhook_endpoints_api = WebhookEndpoints()
+    webhook_endpoints_api = WebhookEndpoints(api_key=get_api_key(), mode='test')
+
+    new_webhook_url = "https://example.org/webhooks/"
+    created_webhook = webhook_endpoints_api.create_webhook_endpoint(url=new_webhook_url)
+    print("Created Webhook Endpoint:", created_webhook)
+
+    all_webhook_endpoints = webhook_endpoints_api.list_webhook_endpoints()
+    print("All Webhook Endpoints:", all_webhook_endpoints)
+
+    webhook_endpoint_token = "your_webhook_endpoint_token_here"
+
+    webhook_endpoint_details = webhook_endpoints_api.get_webhook_endpoint_details(
+        webhook_endpoint_token
+    )
+    print("Webhook Endpoint Details:", webhook_endpoint_details)
+
+    delete_result = webhook_endpoints_api.delete_webhook_endpoint(webhook_endpoint_token)
+    print("Deleted Webhook Endpoint:", delete_result)
