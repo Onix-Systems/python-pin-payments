@@ -71,12 +71,13 @@ class Files(Base):
 if __name__ == '__main__':
     files_api = Files(api_key=get_api_key(), mode='test')
 
-    # You need a file for uploading
-
-    # file_path = 'path/to/your/file.pdf'
-    # purpose = 'dispute_evidence'
-    # upload_response = files_api.upload_file(file_path=file_path, purpose=purpose)
-    # print("File Upload Response:", upload_response)
+    file_path = 'path/to/your/file.pdf'
+    purpose = 'dispute_evidence'
+    try:
+        upload_response = files_api.upload_file(file_path=file_path, purpose=purpose)
+        print("File Upload Response:", upload_response)
+    except FileNotFoundError:
+        print('ERROR:You need a file for uploading')
 
     file_token = 'file_token_example'
 
