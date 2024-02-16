@@ -2,6 +2,7 @@ from typing import Optional, List, Dict
 
 import requests
 
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -155,4 +156,49 @@ class Plans(Base):
 
 
 if __name__ == '__main__':
-    plans_api = Plans()
+    plans_api = Plans(api_key=get_api_key(), mode='test')
+
+    create_response = plans_api.create(
+        name='Monthly Subscription',
+        amount=1000,
+        interval=1,
+        interval_unit='month',
+        currency='AUD',
+        intervals=12,
+        setup_amount=500,
+        trial_amount=0,
+        trial_interval=1,
+        trial_interval_unit='month',
+        customer_permissions=["update", "cancel"]
+    )
+    print("Create Plan Response:", create_response)
+    plan_token = create_response['response']['token']
+
+    list_response = plans_api.list()
+    print("List Plans Response:", list_response)
+
+    details_response = plans_api.details(plan_token=plan_token)
+    print("Plan Details Response:", details_response)
+
+    update_response = plans_api.update(
+        plan_token=plan_token,
+        name='Updated Monthly Subscription',
+        customer_permissions=["cancel"]
+    )
+    print("Update Plan Response:", update_response)
+
+    customer_token = 'example-customer-token'
+    card_token = 'example-card-token'
+    subscription_response = plans_api.create_subscription(
+        plan_token=plan_token,
+        customer_token=customer_token,
+        card_token=card_token,
+        include_setup_fee=True
+    )
+    print("Create Subscription Response:", subscription_response)
+
+    list_subscriptions_response = plans_api.list_subscriptions(plan_token=plan_token)
+    print("List Subscriptions Response:", list_subscriptions_response)
+
+    delete_response = plans_api.delete(plan_token=plan_token)
+    print("Delete Plan Response:", delete_response)

@@ -2,6 +2,7 @@ from typing import Dict, Any
 
 import requests
 
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -65,3 +66,23 @@ class Files(Base):
             'delete_file',
             204
         )
+
+
+if __name__ == '__main__':
+    files_api = Files(api_key=get_api_key(), mode='test')
+
+    file_path = 'path/to/your/file.pdf'
+    purpose = 'dispute_evidence'
+    try:
+        upload_response = files_api.upload_file(file_path=file_path, purpose=purpose)
+        print("File Upload Response:", upload_response)
+    except FileNotFoundError:
+        print('ERROR:You need a file for uploading')
+
+    file_token = 'file_token_example'
+
+    file_details_response = files_api.get_file_details(file_token=file_token)
+    print("File Details Response:", file_details_response)
+
+    delete_file_response = files_api.delete_file(file_token=file_token)
+    print("Delete File Response:", delete_file_response)

@@ -2,6 +2,7 @@ from typing import Optional
 
 import requests
 
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -54,4 +55,12 @@ class BankAccounts(Base):
 
 
 if __name__ == '__main__':
-    bank_accounts_api = BankAccounts()
+    bank_accounts_api = BankAccounts(api_key=get_api_key(), mode='test')
+
+    bank_account_response = bank_accounts_api.create(
+        name="John Doe",
+        bsb="123-456",
+        number="123456789"
+    )
+
+    print("Bank Account Token Creation Response:", bank_account_response)

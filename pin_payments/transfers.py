@@ -1,6 +1,8 @@
 from typing import Optional
 
 import requests
+
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -128,9 +130,26 @@ class Transfers(Base):
 
 
 if __name__ == '__main__':
-    transfers_api = Transfers()
-    transfers_api.create()
-    transfers_api.list()
-    transfers_api.search()
-    transfers_api.details()
-    transfers_api.line_items()
+    transfers_api = Transfers(api_key=get_api_key(), mode='test')
+
+    create_transfer_response = transfers_api.create(
+        description="Test Transfer",
+        amount=10000,
+        currency="AUD",
+        recipient="recipient_token"
+    )
+    print("Create Transfer Response:", create_transfer_response)
+
+    transfer_token = create_transfer_response.get("response", {}).get("token")
+
+    list_transfers_response = transfers_api.list()
+    print("List Transfers Response:", list_transfers_response)
+
+    search_transfers_response = transfers_api.search()
+    print("Search Transfers Response:", search_transfers_response)
+
+    transfer_details_response = transfers_api.details(transfer_token=transfer_token)
+    print("Transfer Details Response:", transfer_details_response)
+
+    line_items_response = transfers_api.line_items(transfer_token=transfer_token)
+    print("Line Items Response:", line_items_response)

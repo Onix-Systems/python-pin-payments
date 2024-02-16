@@ -1,6 +1,8 @@
 from typing import Optional
 
 import requests
+
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -125,9 +127,32 @@ class Recipients(Base):
 
 
 if __name__ == '__main__':
-    recipients_api = Recipients()
-    recipients_api.create()
-    recipients_api.list()
-    recipients_api.get_details()
-    recipients_api.update()
-    recipients_api.list_transfers()
+    recipients_api = Recipients(api_key=get_api_key(), mode='test')
+    # The bank account should be valid
+    new_recipient_response = recipients_api.create(
+        email="recipient@example.com",
+        name="Mr Roland Robot",
+        bank_account={
+            "name": "Mr Roland Robot",
+            "bsb": "123456",
+            "number": "987654321"
+        }
+    )
+    print("New recipient response:", new_recipient_response)
+
+    recipient_token = new_recipient_response.get("response", {}).get("token")
+
+    list_recipients_response = recipients_api.list()
+    print("List of recipients:", list_recipients_response)
+
+    recipient_details_response = recipients_api.get_details(recipient_token=recipient_token)
+    print("Recipient details:", recipient_details_response)
+
+    updated_recipient_response = recipients_api.update(
+        recipient_token=recipient_token,
+        email="updated_recipient@example.com"
+    )
+    print("Updated recipient details:", updated_recipient_response)
+
+    list_transfers_response = recipients_api.list_transfers(recipient_token=recipient_token)
+    print("List of transfers to the recipient:", list_transfers_response)

@@ -1,4 +1,6 @@
 import requests
+
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -26,5 +28,7 @@ class Balance(Base):
 
 
 if __name__ == '__main__':
-    balance_api = Balance()
-    balance_api.detail()
+    balance_api = Balance(api_key=get_api_key(), mode='test')
+
+    balance_detail_response = balance_api.detail()
+    print("Balance Detail Response:", balance_detail_response)

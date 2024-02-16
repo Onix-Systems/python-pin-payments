@@ -509,43 +509,41 @@ class Customers(Base):
 
 if __name__ == '__main__':
     customers_api = Customers(api_key=get_api_key(), mode='test')
-    res1 = customers_api.create(
-        email='test@gmail.com',
-        card=get_test_card_dict()
-    )
-    print(res1)
-    customer_token = res1['response']['token']
-    res2 = customers_api.list()
-    print(res2)
-    res3 = customers_api.details(customer_token)
-    print(res3)
-    res4 = customers_api.update(customer_token=customer_token, card=get_test_card_dict())
-    print(res4)
-    res6 = customers_api.list_charges(customer_token=customer_token)
-    print(res6)
-    res7 = customers_api.list_cards(customer_token=customer_token)
-    print(res7)
-    res8 = customers_api.create_card(
-        customer_token=customer_token,
-        number=get_test_card_dict()['number'],
-        expiry_month=get_test_card_dict()['expiry_month'],
-        expiry_year=get_test_card_dict()['expiry_year'],
-        cvc=get_test_card_dict()['cvc'],
-        name=get_test_card_dict()['name'],
-        address_line1=get_test_card_dict()['address_line1'],
-        address_city=get_test_card_dict()['address_city'],
-        address_country=get_test_card_dict()['address_country'],
-    )
-    print(res8)
-    card_token = res8['response']['token']
-    res10 = customers_api.list_subscriptions(customer_token=customer_token)
-    print(res10)
-    res11 = customers_api.delete_subscriptions(
-        customer_token=customer_token,
-        subscription_token='subscription_token'
-    )
-    print(res11)
-    res5 = customers_api.delete(customer_token=customer_token)
-    print(res5)
-    res9 = customers_api.delete_card(customer_token=customer_token, card_token=card_token)
-    print(res9)
+
+    email = 'test@gmail.com'
+    card_details = get_test_card_dict()
+    customer_creation_response = customers_api.create(email=email, card=card_details)
+    print("Customer Creation Response:", customer_creation_response)
+
+    customer_token = customer_creation_response['response']['token']
+
+    customers_list = customers_api.list()
+    print("Customers List:", customers_list)
+
+    customer_details = customers_api.details(customer_token)
+    print("Customer Details:", customer_details)
+
+    update_response = customers_api.update(customer_token=customer_token, card=card_details)
+    print("Update Response:", update_response)
+
+    charges_list = customers_api.list_charges(customer_token)
+    print("Charges List:", charges_list)
+
+    cards_list = customers_api.list_cards(customer_token)
+    print("Cards List:", cards_list)
+
+    additional_card_response = customers_api.create_card(customer_token=customer_token, **card_details)
+    print("Additional Card Creation Response:", additional_card_response)
+    additional_card_token = additional_card_response['response']['token']
+
+    subscriptions_list = customers_api.list_subscriptions(customer_token)
+    print("Subscriptions List:", subscriptions_list)
+
+    delete_subscription_response = customers_api.delete_subscriptions(customer_token, 'subscription_token')
+    print("Delete Subscription Response:", delete_subscription_response)
+
+    delete_customer_response = customers_api.delete(customer_token)
+    print("Delete Customer Response:", delete_customer_response)
+
+    delete_card_response = customers_api.delete_card(customer_token, additional_card_token)
+    print("Delete Card Response:", delete_card_response)

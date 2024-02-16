@@ -2,6 +2,7 @@ from typing import Optional
 
 import requests
 
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -146,11 +147,37 @@ class Subscriptions(Base):
 
 
 if __name__ == '__main__':
-    subscriptions_api = Subscriptions(api_key=..., mode='test')
+    subscriptions_api = Subscriptions(api_key=get_api_key(), mode='test')
 
-    res1 = subscriptions_api.create_subscription(
-        plan_token='plan_ZyDee4HNeUHFHC4SpM2idg',
-        customer_token='cus_XZg1ULpWaROQCOT5PdwLkQ',
+    plan_token = 'your_plan_token_here'
+    customer_token = 'your_customer_token_here'
+
+    subscription_response = subscriptions_api.create_subscription(
+        plan_token=plan_token,
+        customer_token=customer_token,
+        include_setup_fee=True
+    )
+    print("Subscription Creation:", subscription_response)
+
+    sub_token = subscription_response.get('response', {}).get('token')
+    subscription_details = subscriptions_api.get_subscription_details(sub_token=sub_token)
+    print("Subscription Details:", subscription_details)
+
+    card_token = 'new_card_token_here'
+    updated_subscription = subscriptions_api.update_subscription(
+        sub_token=sub_token,
+        card_token=card_token
+    )
+    print("Updated Subscription:", updated_subscription)
+
+    reactivated_subscription = subscriptions_api.reactivate_subscription(
+        sub_token=sub_token,
         include_setup_fee=False
     )
-    print(res1)
+    print("Reactivated Subscription:", reactivated_subscription)
+
+    cancelled_subscription = subscriptions_api.cancel_subscription(sub_token=sub_token)
+    print("Cancelled Subscription:", cancelled_subscription)
+
+    subscription_ledger = subscriptions_api.fetch_subscription_ledger(sub_token=sub_token)
+    print("Subscription Ledger:", subscription_ledger)

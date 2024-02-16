@@ -2,6 +2,7 @@ from typing import Optional
 
 import requests
 
+from config import get_api_key, get_test_card_dict
 from pin_payments.base import Base
 
 
@@ -93,5 +94,17 @@ class Cards(Base):
 
 
 if __name__ == '__main__':
-    charges_api = Cards()
-    charges_api.create()
+    cards_api = Cards(api_key=get_api_key(), mode='test')
+    card_details = get_test_card_dict()
+
+    new_card_response = cards_api.create(
+        number=card_details["number"],
+        expiry_month=card_details["expiry_month"],
+        expiry_year=card_details["expiry_year"],
+        cvc=card_details["cvc"],
+        name=card_details["name"],
+        address_line1=card_details["address_line1"],
+        address_city=card_details["address_city"],
+        address_country=card_details["address_country"]
+    )
+    print("New card response:", new_card_response)

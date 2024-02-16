@@ -302,25 +302,34 @@ class Charges(Base):
 if __name__ == '__main__':
     charges_api = Charges(api_key=get_api_key(), mode='test')
 
-    res1 = charges_api.create(
+    charge_creation_response = charges_api.create(
         email='test@gmail.com',
-        description='test',
+        description='Test Charge',
         amount=400,
-        ip_address='ip...',
+        ip_address='192.0.2.1',
         card=get_test_card_dict()
     )
-    print(res1)
-    charge_token_ = res1['response']['token']
-    res4 = charges_api.list()
-    print(res4)
-    res5 = charges_api.search()
-    print(res5)
-    res6 = charges_api.charge(charge_token_)
-    print(res6)
-    res2 = charges_api.void(charge_token_)
-    print(res2)
-    res3 = charges_api.capture(charge_token_)
-    print(res3)
-    # NEEDS 3D SECURE SESSION TOKEN
-    # res7 = charges_api.verify()
-    # print(res7)
+    print("Charge Creation Response:", charge_creation_response)
+
+    charge_token = charge_creation_response['response']['token']
+
+    charges_list = charges_api.list()
+    print("Charges List:", charges_list)
+
+    search_results = charges_api.search()
+    print("Search Results:", search_results)
+
+    charge_details = charges_api.charge(charge_token)
+    print("Charge Details:", charge_details)
+
+    void_response = charges_api.void(charge_token)
+    print("Void Response:", void_response)
+
+    capture_response = charges_api.capture(charge_token)
+    print("Capture Response:", capture_response)
+
+    # Assuming a 3D Secure session token is needed and available
+    # Uncomment and modify the next lines according to your actual 3D Secure handling
+    # secure_token = "YOUR_3D_SECURE_SESSION_TOKEN_HERE"
+    # verify_response = charges_api.verify(charge_token, secure_token)
+    # print("Verify Response:", verify_response)

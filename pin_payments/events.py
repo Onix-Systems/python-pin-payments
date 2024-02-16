@@ -2,6 +2,7 @@ from enum import Enum
 
 import requests
 
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -91,4 +92,12 @@ class Events(Base):
 
 
 if __name__ == '__main__':
-    events_api = Events()
+    events_api = Events(api_key=get_api_key(), mode='test')
+
+    all_events_response = events_api.list()
+    print("All Events:", all_events_response)
+
+    event_token = 'example-event-token'
+
+    event_details_response = events_api.details(event_token=event_token)
+    print("Event Details:", event_details_response)

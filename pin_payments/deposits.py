@@ -1,5 +1,6 @@
 import requests
 
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -46,4 +47,12 @@ class Deposits(Base):
 
 
 if __name__ == '__main__':
-    deposits_api = Deposits()
+    deposits_api = Deposits(api_key=get_api_key(), mode='test')
+
+    deposits_list_response = deposits_api.list()
+    print("List of Deposits Response:", deposits_list_response)
+
+    deposit_token = 'example-deposit-token'
+
+    deposit_details_response = deposits_api.details(deposit_token=deposit_token)
+    print("Deposit Details Response:", deposit_details_response)

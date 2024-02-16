@@ -2,6 +2,7 @@ from typing import Optional
 
 import requests
 
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -159,3 +160,34 @@ class Disputes(Base):
             'accept_dispute',
             200
         )
+
+
+if __name__ == '__main__':
+    disputes_api = Disputes(api_key=get_api_key(), mode='test')
+
+    all_disputes = disputes_api.list_disputes()
+    print("All Disputes:", all_disputes)
+
+    searched_disputes = disputes_api.search_disputes(query="unrecognized", status="open")
+    print("Searched Disputes:", searched_disputes)
+
+    dispute_token = "your_dispute_token_here"
+
+    dispute_details = disputes_api.get_dispute_details(dispute_token)
+    print("Dispute Details:", dispute_details)
+
+    dispute_activity = disputes_api.get_dispute_activity(dispute_token)
+    print("Dispute Activity:", dispute_activity)
+
+    dispute_evidence = disputes_api.get_dispute_evidence(dispute_token)
+    print("Dispute Evidence:", dispute_evidence)
+
+    evidence_data = {"customer_communication": "Evidence of communication with the customer."}
+    updated_evidence = disputes_api.update_dispute_evidence(dispute_token, evidence_data)
+    print("Updated Evidence:", updated_evidence)
+
+    submitted_evidence = disputes_api.submit_dispute_evidence(dispute_token)
+    print("Submitted Evidence for Review:", submitted_evidence)
+
+    accepted_dispute = disputes_api.accept_dispute(dispute_token)
+    print("Accepted Dispute:", accepted_dispute)

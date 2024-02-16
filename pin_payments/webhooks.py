@@ -1,5 +1,6 @@
 import requests
 
+from config import get_api_key
 from pin_payments.base import Base
 
 
@@ -62,4 +63,15 @@ class Webhooks(Base):
 
 
 if __name__ == '__main__':
-    webhooks_api = Webhooks()
+    webhooks_api = Webhooks(api_key=get_api_key(), mode='test')
+
+    all_webhooks = webhooks_api.list_webhooks()
+    print("All Webhooks:", all_webhooks)
+
+    webhook_token = "your_webhook_token_here"
+
+    webhook_details = webhooks_api.get_webhook_details(webhook_token)
+    print("Webhook Details:", webhook_details)
+
+    replayed_webhook = webhooks_api.replay_webhook(webhook_token)
+    print("Replayed Webhook:", replayed_webhook)
