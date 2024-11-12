@@ -1,5 +1,13 @@
 # Python-Pin-Payments Library
 
+## Name
+python-pin-payments
+
+## Installation
+This framework is published at the PyPI, install it with pip:
+```bash
+pip install python-pin-payments
+```
 ## Overview
 
 The Python-Pin-Payments library is a comprehensive tool designed to interact with the Pin Payments API. It simplifies the process of handling payment operations, including charges, customer management, and refunds. This library encompasses several modules:
