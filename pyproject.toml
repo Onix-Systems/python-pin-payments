@@ -1,21 +1,25 @@
 [tool.poetry]
 name = "python-pin-payments"
 version = "0.2.0"
-description = ""
-authors = ["Bohdan Salamakha <allen.avanheim@gmail.com>"]
+description = "Python library for interacting with the Pin Payments API"
+authors = ["Viacheslav Lisovoi <viacheslav.lisovoi@onix-systems.com>"]
 readme = "README.md"
-packages = [{include = "python_pin_payments"}]
+
+license = "MIT"
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-flake8 = "^6.1.0"
-requests = "^2.31.0"
+requests = "^2.32.0"
 python-dotenv = "^1.0.1"
 
-
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.dev-dependencies]
+flake8 = "^6.1.0"
 commitizen = "^3.13.0"
-
 
 [tool.commitizen]
 name = "cz_conventional_commits"
@@ -24,6 +28,7 @@ version_scheme = "pep440"
 version_provider = "poetry"
 update_changelog_on_bump = true
 major_version_zero = true
+
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
