@@ -16,6 +16,13 @@ class Plans(Base):
             api_key: str,
             mode: str = 'live'
     ):
+        """
+        Initialize the Plans API with an API key and mode
+        :param api_key: The API key for authentication.
+        :type api_key: str
+        :param mode: The mode for the API, either 'live' or 'test'. Defaults to 'live'.
+        :type mode: str
+        """
         super().__init__(api_key=api_key, mode=mode)
         self._base_url += 'plans/'
 
@@ -34,7 +41,31 @@ class Plans(Base):
             customer_permissions: Optional[List[str]] = None
     ) -> Dict:
         """
-        Creates a new plan and returns its details.
+        Creates a new plan and returns its details
+        :param name: The name of the plan.
+        :type name: str
+        :param amount: The amount to be charged for the plan.
+        :type amount: int
+        :param interval: The interval for recurring charges.
+        :type interval: int
+        :param interval_unit: The unit of time for the interval (e.g., 'month', 'year').
+        :type interval_unit: str
+        :param currency: The currency code for the plan. Defaults to 'AUD'.
+        :type currency: str, optional
+        :param intervals: The number of intervals before the plan ends. Defaults to 0 (no end).
+        :type intervals: int, optional
+        :param setup_amount: The setup fee amount for the plan. Defaults to 0.
+        :type setup_amount: int, optional
+        :param trial_amount: The trial fee amount. Defaults to 0.
+        :type trial_amount: int, optional
+        :param trial_interval: The number of intervals for the trial. Defaults to 0.
+        :type trial_interval: int, optional
+        :param trial_interval_unit: The unit of time for the trial interval. Defaults to ''.
+        :type trial_interval_unit: str, optional
+        :param customer_permissions: A list of customer permissions for the plan. Defaults to ['cancel'].
+        :type customer_permissions: list, optiona
+        :return: The response containing the details of the newly created plan.
+        :rtype: dict
         """
         if customer_permissions is None:
             customer_permissions = ["cancel"]
@@ -61,7 +92,9 @@ class Plans(Base):
 
     def list(self) -> Dict:
         """
-        Returns a paginated list of all plans.
+        Returns a paginated list of all plans
+        :return: A dictionary containing the list of plans.
+        :rtype: dict
         """
         response = requests.get(self._base_url, auth=self._auth)
         return self._handle_response(
@@ -72,7 +105,11 @@ class Plans(Base):
 
     def details(self, plan_token: str) -> Dict:
         """
-        Returns the details of a specified plan.
+        Returns the details of a specified plan
+        :param plan_token: The token of the plan to retrieve details for.
+        :type plan_token: st
+        :return: A dictionary containing the details of the specified plan.
+        :rtype: dict
         """
         url = f"{self._base_url}{plan_token}"
         response = requests.get(url, auth=self._auth)
@@ -89,7 +126,15 @@ class Plans(Base):
             customer_permissions: Optional[List[str]] = None
     ) -> Dict:
         """
-        Update the specified plan.
+        Update the specified plan
+        :param plan_token: The token of the plan to be updated.
+        :type plan_token: str
+        :param name: The new name of the plan. Defaults to None (no change).
+        :type name: str, optional
+        :param customer_permissions: A list of customer permissions to be updated. Defaults to None (no change).
+        :type customer_permissions: list, optiona
+        :return: A dictionary containing the updated plan details.
+        :rtype: dict
         """
         url = f"{self._base_url}{plan_token}"
         data = {}
@@ -107,7 +152,11 @@ class Plans(Base):
 
     def delete(self, plan_token: str) -> Dict:
         """
-        Deletes a plan and all of its subscriptions.
+        Deletes a plan and all of its subscriptions
+        :param plan_token: The token of the plan to delete.
+        :type plan_token: st
+        :return: An empty dictionary indicating the plan has been deleted.
+        :rtype: dict
         """
         url = f"{self._base_url}{plan_token}"
         response = requests.delete(url, auth=self._auth)
@@ -126,6 +175,32 @@ class Plans(Base):
     ) -> Dict:
         """
         Creates a new subscription to the specified plan.
+
+        :param plan_token: The token of the plan to subscribe to.
+        :type plan_token: str
+        :param customer_token: The token of the customer subscribing to the plan.
+        :type customer_token: str
+        :param card_token: The card token to be used for the subscription. Defaults to None (no card).
+        :type card_token: str, optional
+        :param include_setup_fee: Whether to include the setup fee in the subscription. Defaults to True.
+        :type include_setup_fee: bool, optional
+
+        :return: A dictionary containing the details of the newly created subscription.
+        :rtype: dict
+        """"""
+        Creates a new subscription to the specified plan.
+
+        :param plan_token: The token of the plan to subscribe to.
+        :type plan_token: str
+        :param customer_token: The token of the customer subscribing to the plan.
+        :type customer_token: str
+        :param card_token: The card token to be used for the subscription. Defaults to None (no card).
+        :type card_token: str, optional
+        :param include_setup_fee: Whether to include the setup fee in the subscription. Defaults to True.
+        :type include_setup_fee: bool, optional
+
+        :return: A dictionary containing the details of the newly created subscription.
+        :rtype: dict
         """
         url = f"{self._base_url}{plan_token}/subscriptions"
         data = {
@@ -144,7 +219,11 @@ class Plans(Base):
 
     def list_subscriptions(self, plan_token: str) -> Dict:
         """
-        Returns a paginated list of subscriptions for a plan.
+        Returns a paginated list of subscriptions for a plan
+        :param plan_token: The token of the plan to retrieve subscriptions for.
+        :type plan_token: st
+        :return: A dictionary containing the list of subscriptions for the plan.
+        :rtype: dict
         """
         url = f"{self._base_url}{plan_token}/subscriptions"
         response = requests.get(url, auth=self._auth)

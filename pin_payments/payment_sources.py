@@ -16,7 +16,6 @@ class PaymentSources(Base):
     def __init__(self, api_key: str, mode: str = 'live'):
         """
         Initializes the Payment Sources API client with the given API key and mode.
-
         :param api_key: The API key to authenticate requests.
         :param mode: Either 'live' or 'test' to set the environment.
         """
@@ -31,13 +30,10 @@ class PaymentSources(Base):
     ) -> dict:
         """
         Securely stores a payment source’s details and returns its token and other information.
-
-        :param source_type: The type of payment source to create
-        (e.g., 'card', 'applepay', 'googlepay', 'network_token').
+        :param source_type: The payment's type source to create(e.g., 'card', 'applepay', 'googlepay', 'network_token').
         :param source: A dictionary containing the details of the payment source.
         :param publishable_api_key: Optional;
-        Your publishable API key if requesting from an insecure environment
-        like a web browser or mobile app.
+        Your publishable API key if requesting from an insecure environment like a web browser or mobile app.
         :return: A dictionary with the payment source token and other details.
         """
         if source_type not in ('card', 'applepay', 'googlepay', 'network_token'):

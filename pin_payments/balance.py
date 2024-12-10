@@ -16,7 +16,6 @@ class Balance(Base):
     def detail(self) -> dict:
         """
         Returns the current balance of the Pin Payments account.
-
         :return: dict
         """
         response = requests.get(self._base_url, auth=self._auth)

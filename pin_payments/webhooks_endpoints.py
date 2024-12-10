@@ -17,7 +17,6 @@ class WebhookEndpoints(Base):
     def create_webhook_endpoint(self, url: str) -> dict:
         """
         Creates a new webhook endpoint and returns its details.
-        POST /webhook_endpoints
         :param url: The destination URL of the webhook endpoint.
         """
         data = {'url': url}
@@ -31,7 +30,6 @@ class WebhookEndpoints(Base):
     def list_webhook_endpoints(self) -> dict:
         """
         Returns a paginated list of all webhook endpoints.
-        GET /webhook_endpoints
         """
         response = requests.get(self._base_url, auth=self._auth)
         return self._handle_response(
@@ -43,7 +41,6 @@ class WebhookEndpoints(Base):
     def get_webhook_endpoint_details(self, webhook_endpoint_token: str) -> dict:
         """
         Returns the details of the specified webhook endpoint.
-        GET /webhook_endpoints/<webhook_endpoint_token>
         :param webhook_endpoint_token: Token of the webhook endpoint.
         """
         url = f"{self._base_url}{webhook_endpoint_token}"
@@ -57,7 +54,6 @@ class WebhookEndpoints(Base):
     def delete_webhook_endpoint(self, webhook_endpoint_token: str) -> dict:
         """
         Deletes a webhook endpoint and all of its webhook requests.
-        DELETE /webhook_endpoints/<webhook_endpoint_token>
         :param webhook_endpoint_token: Token of the webhook endpoint to be deleted.
         """
         url = f"{self._base_url}{webhook_endpoint_token}"

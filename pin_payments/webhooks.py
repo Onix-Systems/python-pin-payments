@@ -24,7 +24,6 @@ class Webhooks(Base):
     def list_webhooks(self) -> dict:
         """
         Returns a paginated list of all webhooks.
-        GET /webhooks
         """
         response = requests.get(self._base_url, auth=self._auth)
         return self._handle_response(
@@ -36,7 +35,6 @@ class Webhooks(Base):
     def get_webhook_details(self, webhook_token: str) -> dict:
         """
         Returns the details of a webhook.
-        GET /webhooks/<webhook_token>
         :param webhook_token: Token of the webhook.
         """
         url = f"{self._base_url}{webhook_token}"
@@ -50,7 +48,6 @@ class Webhooks(Base):
     def replay_webhook(self, webhook_token: str) -> dict:
         """
         Replays a webhook.
-        PUT /webhooks/<webhook_token>/replay
         :param webhook_token: Token of the webhook to be replayed.
         """
         url = f"{self._base_url}{webhook_token}/replay"

@@ -27,8 +27,6 @@ class Merchants(Base):
         """
         Creates a new referred merchant in the system and returns a confirmation.
 
-        POST /merchants
-
         :param contact: Personal details of the user logging into the merchant entity account.
         :param entity: Legal operating details of the merchant entity.
         :param business: Business details of the merchant entity.
@@ -57,8 +55,6 @@ class Merchants(Base):
         """
         Returns a paginated list of all the merchants referred by you.
 
-        GET /merchants
-
         :return: dict
         """
         response = requests.get(self._base_url, auth=self._auth)
@@ -71,8 +67,6 @@ class Merchants(Base):
     def details(self, merchant_token: str) -> dict:
         """
         Returns the details of a specified merchant referred by you.
-
-        GET /merchants/merchant-token
 
         :param merchant_token: Token of the merchant
         :return: dict
@@ -88,8 +82,6 @@ class Merchants(Base):
     def default_settings(self) -> dict:
         """
         Returns the default settings that will be applied to new merchants referred by you.
-
-        GET /merchants/default_settings
 
         :return: dict
         """
