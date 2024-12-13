@@ -24,10 +24,8 @@ class Disputes(Base):
     ) -> dict:
         """
         Returns a paginated list of all disputes.
-        GET /disputes
         :param sort: The field used to sort the disputes.
-        :param direction: The direction in which to sort the
-        disputes (1 for ascending or -1 for descending).
+        :param direction: The direction in which to sort the disputes (1 for ascending or -1 for descending).
         :return: dict
         """
         params = {}
@@ -50,7 +48,6 @@ class Disputes(Base):
     ) -> dict:
         """
         Returns a paginated list of disputes matching the search criteria.
-        GET /disputes/search
         :param query: Query for searching disputes.
         :param status: The status of the disputes.
         :param sort: The field used to sort the disputes.
@@ -75,7 +72,6 @@ class Disputes(Base):
     def get_dispute_details(self, dispute_token: str) -> dict:
         """
         Returns the details of a dispute.
-        GET / disputes / < dispute_token >
         :param dispute_token: The token of the dispute.
         :return: dict
         """
@@ -89,7 +85,6 @@ class Disputes(Base):
     def get_dispute_activity(self, dispute_token: str) -> dict:
         """
         Returns the activity feed for a dispute.
-        GET / disputes / < dispute_token > / activity
         :param dispute_token: The token of the dispute.
         :return: dict
         """
@@ -103,7 +98,6 @@ class Disputes(Base):
     def get_dispute_evidence(self, dispute_token: str) -> dict:
         """
         Displays current evidence batch for a dispute.
-        GET / disputes / < dispute_token > / evidence
         :param dispute_token: The token of the dispute.
         :return: dict
         """
@@ -121,7 +115,6 @@ class Disputes(Base):
     ) -> dict:
         """
         Updates evidence batch for a dispute.
-        PUT / disputes / < dispute_token > / evidence
         :param dispute_token: The token of the dispute.
         :param evidence_data: The evidence data to be updated.
         :return: dict
@@ -136,7 +129,6 @@ class Disputes(Base):
     def submit_dispute_evidence(self, dispute_token: str) -> dict:
         """
         Submits current evidence batch for review.
-        POST / disputes / < dispute_token > / evidence
         :param dispute_token: The token of the dispute.
         :return: dict
         """
@@ -150,7 +142,6 @@ class Disputes(Base):
     def accept_dispute(self, dispute_token: str) -> dict:
         """
         Accepts a dispute.
-        POST / disputes / < dispute_token > / accept
         :param dispute_token: The token of the dispute.
         :return: dict
         """

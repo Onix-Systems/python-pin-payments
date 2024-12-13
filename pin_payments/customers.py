@@ -8,19 +8,16 @@ from pin_payments.base import Base
 
 class Customers(Base):
     """
-    The customers API allows you to store a customer’s email address and payment card details.
-    A customer can then be used with the charges API to create multiple charges over time.
-    A customer can have multiple cards.
-    At any given time, one will be considered the customer’s primary card.
-    The card property of a customer object represents this primary card.
-    Each card object has a primary property, which is true for a customer’s primary card and false for its other cards.
+    Initializes the Customers object with API key and mode
+    :param api_key: The API key for authenticating with the service.
+    :param mode: The mode in which the API operates. Default is 'live'.
     """
-
     def __init__(
             self,
             api_key: str,
             mode: str = 'live'
     ):
+
         super().__init__(api_key=api_key, mode=mode)
         self._base_url += 'customers/'
 
@@ -37,39 +34,17 @@ class Customers(Base):
             card_token: Optional[str] = None
     ) -> dict:
         """
-        Creates a new customer and returns its details.
-
-        POST /customers
-
-        Example:
-        curl https://test-api.pinpayments.com/1/customers -u your-secret-api-key: \
-         -d "email=roland@pinpayments.com" \
-         -d "first_name=Roland" \
-         -d "last_name=Robot" \
-         -d "phone_number=1300 364 800" \
-         -d "company=Pin Payments" \
-         -d "notes=Account manager at Pin Payments" \
-         -d "card[number]=5520000000000000" \
-         -d "card[expiry_month]=05" \
-         -d "card[expiry_year]=2024" \
-         -d "card[cvc]=123" \
-         -d "card[name]=Roland Robot" \
-         -d "card[address_line1]=42 Sevenoaks St" \
-         -d "card[address_line2]=" \
-         -d "card[address_city]=Lathlain" \
-         -d "card[address_postcode]=6454" \
-         -d "card[address_state]=WA" \
-         -d "card[address_country]=Australia"
-
-        :param email: The email address of the customer.
-        :param first_name: The customer’s first name.
-        :param last_name: The customer’s surname.
-        :param phone_number: The customer’s contact number.
-        :param company: The company associated with the customer.
-        :param notes: Internal notes for the customer.
-        :param card: The full details of the payment card to be stored
-        :param card_token: The token of the card to be stored, as returned from the cards API or customers API.
-        :return: None
+        Creates a new customer
+        :param email: The customer's email address.
+        :param first_name: The customer's first name (optional).
+        :param last_name: The customer's last name (optional).
+        :param phone_number: The customer's phone number (optional).
+        :param company: The customer's company (optional).
+        :param notes: Notes related to the customer (optional).
+        :param card: Card details to associate with the customer (optional).
+        :param card_token: A token representing a pre-existing card to associate with the customer (optional).
+        :return: A dictionary containing the customer details.
+        :raises ValueError: If both card and card_token are provided.
         """
         if (
                 card is not None and card_token is not None
@@ -108,14 +83,8 @@ class Customers(Base):
             self
     ) -> dict:
         """
-        Returns a paginated list of all customers.
-
-        GET /customers
-
-        Example:
-        curl https://test-api.pinpayments.com/1/customers -u your-secret-api-key:
-
-        :return: None
+        Lists all customers
+        :return: A dictionary containing the list of customers.
         """
         response = requests.get(self._base_url, auth=self._auth)
 
@@ -130,15 +99,9 @@ class Customers(Base):
             customer_token: str
     ) -> dict:
         """
-        Returns the details of a customer.
-
-        GET /customers/customer-token
-
-        Example:
-        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ -u your-secret-api-key:
-
-        :param customer_token: Token of the customer
-        :return: None
+        Retrieves the details of a specific customer
+        :param customer_token: The unique identifier of the customer.
+        :return: A dictionary containing the customer details.
         """
         url = f"{self._base_url}{customer_token}"
         response = requests.get(url, auth=self._auth)
@@ -164,57 +127,19 @@ class Customers(Base):
             primary_card_token: Optional[str] = None,
     ) -> dict:
         """
-        Updates the details of a customer and returns the updated details.
-        You can update the customer’s cards in one of four ways:
-        You can use the card[...] parameters to store a new card that will replace the
-        customer’s primary card. The customer’s current primary card will be removed from
-        storage and you will not be able to recover it.
-        You can use the card_token parameter to replace the customer’s primary card
-        with a previously stored card. The card token must either be already associated
-        with this customer record or unused. The customer’s current primary card will be
-        removed from storage and you will not be able to recover it.
-        You can use the primary_card_token parameter to switch the customer’s
-        primary card to a previously stored card.
-        The card token must either be already associated with this customer
-        record or unused. The current primary card will become a non-primary card
-        of the customer.
-        You can use none of the above parameters. The customer’s cards will not change.
-        In addition, you can update the customer’s email address and contact details.
-
-        PUT /customers/customer-token
-
-        Example:
-        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ -u your-secret-api-key: -X PUT \
-         -d "email=roland@pinpayments.com" \
-         -d "first_name=Roland" \
-         -d "last_name=Robot" \
-         -d "phone_number=1300 364 800" \
-         -d "company=Pin Payments" \
-         -d "notes=Account manager at Pin Payments" \
-         -d "card[number]=5520000000000000" \
-         -d "card[expiry_month]=05" \
-         -d "card[expiry_year]=2024" \
-         -d "card[cvc]=123" \
-         -d "card[name]=Roland Robot" \
-         -d "card[address_line1]=42 Sevenoaks St" \
-         -d "card[address_line2]=" \
-         -d "card[address_city]=Lathlain" \
-         -d "card[address_postcode]=6454" \
-         -d "card[address_state]=WA" \
-         -d "card[address_country]=Australia"
-
-        :param customer_token: Token of the customer.
-        :param email: The email address of the customer.
-        :param first_name: The customer’s first name.
-        :param last_name: The customer’s surname.
-        :param phone_number: The customer’s contact number.
-        :param company: The company associated with the customer.
-        :param notes: Internal notes for the customer.
-        :param card: The full details of the payment card to be stored
-        :param card_token: The token of the card to be stored, as returned from the cards API or customers API.
-        :param primary_card_token: The token of the card to become the customer’s
-        primary card, as returned from the cards API or customers API.
-        :return: None
+        Updates the details of an existing customer
+        :param customer_token: The unique identifier of the customer to update.
+        :param email: The updated email address (optional).
+        :param first_name: The updated first name (optional).
+        :param last_name: The updated last name (optional).
+        :param phone_number: The updated phone number (optional).
+        :param company: The updated company (optional).
+        :param notes: Updated notes (optional).
+        :param card: Updated card details (optional).
+        :param card_token: The card token to use (optional).
+        :param primary_card_token: The primary card token to update the customer (optional).
+        :return: A dictionary containing the updated customer details.
+        :raises ValueError: If more than one card-related parameter is provided.
         """
         if (
                 card is not None and card_token is not None and primary_card_token is not None
@@ -257,15 +182,9 @@ class Customers(Base):
             customer_token: str
     ) -> dict:
         """
-        Deletes a customer and all of its cards. You will not be able to recover them.
-
-        DELETE /customers/customer-token
-
-        Example:
-        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ -u your-secret-api-key: -X DELETE
-
-        :param customer_token: Token of the customer.
-        :return: None
+        Deletes a customer
+        :param customer_token: The unique identifier of the customer to delete.
+        :return: An empty dictionary if the deletion was successful.
         """
         url = f"{self._base_url}{customer_token}"
         response = requests.delete(url, auth=self._auth)
@@ -281,15 +200,9 @@ class Customers(Base):
             customer_token: str
     ) -> dict:
         """
-        Returns a paginated list of a customer’s charges.
-
-        GET /customers/customer-token/charges
-
-        Example:
-        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ/charges -u your-secret-api-key:
-
-        :param customer_token: Token of the customer.
-        :return: None
+        Lists all cards associated with a specific customer
+        :param customer_token: The unique identifier of the customer.
+        :return: A dictionary containing the list of cards for the customer.
         """
         url = f"{self._base_url}{customer_token}/charges"
         response = requests.get(url, auth=self._auth)
@@ -304,17 +217,7 @@ class Customers(Base):
             self,
             customer_token: str
     ) -> dict:
-        """
-        Returns a paginated list of a customer’s cards.
 
-        GET /customers/customer-token/charges
-
-        Example:
-        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ/cards -u your-secret-api-key:
-
-        :param customer_token: Token of the customer.
-        :return: None
-        """
         url = f"{self._base_url}{customer_token}/cards"
         response = requests.get(url, auth=self._auth)
 
@@ -345,44 +248,24 @@ class Customers(Base):
             card_token: Optional[str] = None
     ) -> dict:
         """
-        Creates an additional card for the specified customer and returns its details.
-        The customer’s primary card will not be changed by this operation.
-        There are two ways to call this.
-        One way is to specify the card details directly using these parameters:
-
-        POST /customers/customer-token/cards
-
-        Example:
-        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ/cards -u your-secret-api-key: \
-         -d "number=5520000000000000" \
-         -d "expiry_month=05" \
-         -d "expiry_year=2024" \
-         -d "cvc=123" \
-         -d "name=Roland Robot" \
-         -d "address_line1=42 Sevenoaks St" \
-         -d "address_line2=" \
-         -d "address_city=Lathlain" \
-         -d "address_postcode=6454" \
-         -d "address_state=WA" \
-         -d "address_country=Australia"
-
-        :param customer_token: Token of the customer.
-        :param number: The card number (e.g. 5520000000000000).
-        :param expiry_month: The month of expiry (e.g. 12).
-        :param expiry_year: The year of expiry (e.g. 2024).
-        :param cvc: The card security code (e.g. 123).
-        :param name: The name on the card (e.g. Roland Robot).
-        :param address_line1: Line 1 of the card’s billing address (e.g. 42 Sevenoaks St).
-        :param address_city: The city of the card’s billing address (e.g. Lathlain).
-        :param address_country: The country of the card’s billing address.
-        Either the full name (e.g. Australia) or the ISO 3166-1 two-letter country code (e.g. AU).
-        :param publishable_api_key: Your publishable API key, if requesting from an insecure environment.
-        :param address_line2: Line 2 of the card’s billing address (e.g. Apt 1).
-        :param address_postcode: The postcode of the card’s billing address (e.g. 6454).
-        :param address_state: The state of the card’s billing address (e.g. WA).
-        :param card_token: The token of the card to be associated with the customer,
-        as returned from the cards API or customers API.
-        :return: None
+        Creates a new card for a customer
+        :param customer_token: The unique identifier of the customer.
+        :param number: The card number (optional).
+        :param expiry_month: The expiry month of the card (optional).
+        :param expiry_year: The expiry year of the card (optional).
+        :param cvc: The card's CVC code (optional).
+        :param name: The name on the card (optional).
+        :param address_line1: The first line of the address (optional).
+        :param address_city: The city of the address (optional).
+        :param address_country: The country of the address (optional).
+        :param publishable_api_key: The publishable API key (optional).
+        :param address_line2: The second line of the address (optional).
+        :param address_postcode: The postcode of the address (optional).
+        :param address_state: The state of the address (optional).
+        :param card_token: A token for an existing card to associate (optional).
+        :return: A dictionary containing the card details.
+        :raises ValueError: If both card_token and card parameters are provided.
+        :raises ValueError: If required card details are missing.
         """
         url = f"{self._base_url}/{customer_token}/cards"
 
@@ -432,17 +315,10 @@ class Customers(Base):
             card_token: str,
     ) -> dict:
         """
-        Deletes a customer’s non-primary card. You will not be able to recover it.
-
-        DELETE /customers/customer-token/cards/card-token
-
-        Example:
-        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ/
-        cards/card_ZFThCjFi7wCNkopytxQVKA -u your-secret-api-key: -X DELETE
-
-        :param customer_token: Token of the customer.
-        :param card_token: Card token of the customer.
-        :return: None
+        Deletes a card associated with a customer
+        :param customer_token: The unique identifier of the customer.
+        :param card_token: The token of the card to delete.
+        :return: An empty dictionary if the deletion was successful.
         """
         url = f"{self._base_url}{customer_token}/cards/{card_token}"
         response = requests.delete(url, auth=self._auth)
@@ -458,16 +334,9 @@ class Customers(Base):
             customer_token: str
     ) -> dict:
         """
-        Retrieves the specified customer's subscriptions.
-
-        GET /customers/customer-token/subscriptions
-
-        Example:
-        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ/
-        subscriptions -u your-secret-api-key:
-
-        :param customer_token: Token of the customer.
-        :return: None
+        Lists all subscriptions for a specific customer
+        :param customer_token: The unique identifier of the customer.
+        :return: A dictionary containing the list of subscriptions for the customer.
         """
         url = f"{self._base_url}{customer_token}/subscriptions"
         response = requests.get(url, auth=self._auth)
@@ -484,18 +353,10 @@ class Customers(Base):
             subscription_token: str
     ) -> dict:
         """
-        Cancels the subscription identified by subscription token.
-        Subscriptions can only be cancelled if they are in trial or active state.
-
-        DELETE /customers/customer-token/subscriptions/sub-token
-
-        Example:
-        curl https://test-api.pinpayments.com/1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ/
-        subscriptions/sub_bZWXhTzHooKpk9FZjQfzqQ -u your-secret-api-key: -X DELETE
-
-        :param customer_token: Token of the customer.
-        :param subscription_token: Subscription token of the customer.
-        :return: None
+        Deletes a subscription for a specific customer
+        :param customer_token: The unique identifier of the customer.
+        :param subscription_token: The unique identifier of the subscription to delete.
+        :return: An empty dictionary if the deletion was successful.
         """
         url = f"{self._base_url}{customer_token}/subscriptions/{subscription_token}"
         response = requests.delete(url, auth=self._auth)

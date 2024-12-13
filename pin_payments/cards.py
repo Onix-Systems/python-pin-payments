@@ -9,6 +9,9 @@ from pin_payments.base import Base
 class Cards(Base):
     """
     The cards API allows you to securely store payment card details in exchange for a card token.
+    This class provides functionality for interacting with the cards API, including storing
+    payment card details, retrieving information about stored cards, and managing card-related
+    operations.
     """
 
     def __init__(
@@ -16,6 +19,11 @@ class Cards(Base):
             api_key: str,
             mode: str = 'live'
     ):
+        """
+        Initializes the Cards API client
+        :param api_key: The API key used for authentication.
+        :param mode: The mode of operation, either 'live' or 'test'. Defaults to 'live'.
+        """
         super().__init__(api_key=api_key, mode=mode)
         self._base_url += 'cards/'
 
@@ -35,38 +43,23 @@ class Cards(Base):
             address_state: Optional[str] = None,
     ) -> dict:
         """
-        Securely stores a card’s details and returns its token and other information.
-
-        POST /cards
-
-        Example:
-        curl https://test-api.pinpayments.com/1/cards -d "publishable_api_key=your-publishable-api-key" \
-         -d "number=5520000000000000" \
-         -d "expiry_month=05" \
-         -d "expiry_year=2025" \
-         -d "cvc=123" \
-         -d "name=Roland Robot" \
-         -d "address_line1=42 Sevenoaks St" \
-         -d "address_line2=" \
-         -d "address_city=Lathlain" \
-         -d "address_postcode=6454" \
-         -d "address_state=WA" \
-         -d "address_country=Australia"
-
-        :param number: The card number (e.g. 5520000000000000).
-        :param expiry_month: The month of expiry (e.g. 12).
-        :param expiry_year: The year of expiry (e.g. 2025).
-        :param cvc: The card security code (e.g. 123).
-        :param name: The name on the card (e.g. Roland Robot).
-        :param address_line1: Line 1 of the card’s billing address (e.g. 42 Sevenoaks St).
-        :param address_city: The city of the card’s billing address (e.g. Lathlain).
-        :param address_country: The country of the card’s billing address.
-        Either the full name (e.g. Australia) or the ISO 3166-1 two-letter country code (e.g. AU).
-        :param publishable_api_key: Your publishable API key, if requesting from an insecure environment.
-        :param address_line2: Line 2 of the card’s billing address (e.g. Apt 1).
-        :param address_postcode: The postcode of the card’s billing address (e.g. 6454).
-        :param address_state: The state of the card’s billing address (e.g. WA).
-        :return: dict
+        Creates a new payment card and stores it securely
+        This method securely stores the card details provided and returns a card token that can be
+        used for future transactions
+        :param number: The card number (16 digits).
+        :param expiry_month: The expiry month of the card (1-12).
+        :param expiry_year: The expiry year of the card (4 digits).
+        :param cvc: The card's CVC (3 digits).
+        :param name: The cardholder's name.
+        :param address_line1: The first line of the cardholder's address.
+        :param address_city: The city of the cardholder's address.
+        :param address_country: The country of the cardholder's address.
+        :param publishable_api_key: An optional publishable API key (if applicable).
+        :param address_line2: An optional second line of the cardholder's address.
+        :param address_postcode: An optional postcode of the cardholder's address.
+        :param address_state: An optional state of the cardholder's address
+        :return: A dictionary containing the response data from the API, including the card token
+        :raises ValueError: If required parameters are missing or invalid.
         """
         data = {
             "number": number,

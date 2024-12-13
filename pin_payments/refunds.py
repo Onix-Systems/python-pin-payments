@@ -8,7 +8,12 @@ from pin_payments.base import Base
 
 class Refunds(Base):
     """
-    The refunds API allows you to refund charges and retrieve the details of previous refunds.
+    A class to handle refund operations for payments.
+    This class interacts with an API to manage and retrieve information about refunds.
+    :param api_key: The API key used for authentication.
+    :type api_key: str
+    :param mode: The mode of the API (either 'live' or 'test'). Defaults to 'live'.
+    :type mode: str
     """
 
     def __init__(
@@ -16,20 +21,24 @@ class Refunds(Base):
             api_key: str,
             mode: str = 'live'
     ):
+        """
+        Initializes the Refunds class with the provided API key and mode
+        :param api_key: The API key used for authentication.
+        :type api_key: str
+        :param mode: The mode of the API ('live' or 'test'). Defaults to 'live'.
+        :type mode: str
+        """
         super().__init__(api_key=api_key, mode=mode)
 
     def list(
             self
     ) -> dict:
         """
-        Returns a paginated list of all refunds.
-
-        GET /refunds
-
-        Example:
-        curl https://test-api.pinpayments.com/1/refunds -u your-secret-api-key:
-
-        :return: None
+        Retrieves a list of all refunds
+        Makes a GET request to the refunds endpoint of the API
+        :return: A dictionary containing the list of refunds.
+        :rtype: dic
+        :raises Exception: If the request fails or returns an error response.
         """
         url = f"{self._base_url}refunds/"
         response = requests.get(url, auth=self._auth)
@@ -45,15 +54,12 @@ class Refunds(Base):
             refund_token: str
     ) -> dict:
         """
-        Returns the details of the specified refund.
-
-        GET /refunds/refund-token
-
-        Example:
-        curl https://test-api.pinpayments.com/1/refunds/rf_ERCQy--Ay6o-NKGiUVcKKA -u your-secret-api-key: -X GET
-
-        :param refund_token: Refund Token
-        :return: None
+        Retrieves details of a specific refund using the refund token
+        :param refund_token: The token of the refund to retrieve details for.
+        :type refund_token: str
+        :return: A dictionary containing the details of the specified refund.
+        :rtype: dic
+        :raises Exception: If the request fails or returns an error response.
         """
         url = f"{self._base_url}refunds/{refund_token}"
         response = requests.get(url, auth=self._auth)
@@ -70,18 +76,14 @@ class Refunds(Base):
             amount: Optional[int] = None
     ) -> dict:
         """
-        Creates a new refund and returns its details.
-
-        POST /charges/charge-token/refunds
-
-        Example:
-        curl https://test-api.pinpayments.com/1/charges/ch_bZ3RhJnIUZ8HhfvH8CCvfA/refunds
-        -u your-secret-api-key: -X POST
-
-        :param charge_token: Charge Token
-        :param amount: The amount to refund in the currency’s base unit
-        (e.g. cents for AUD, yen for JPY). Default value is the full amount of the charge.
-        :return: None
+        Creates a refund for a given charge token
+        :param charge_token: The charge token associated with the refund.
+        :type charge_token: str
+        :param amount: The amount to be refunded, if provided. Defaults to None.
+        :type amount: Optional[int]
+        :return: A dictionary containing the details of the created refund.
+        :rtype: dict
+        :raises Exception: If the request fails or returns an error response.
         """
         url = f"{self._base_url}charges/{charge_token}/refunds"
         data = {}
@@ -102,15 +104,12 @@ class Refunds(Base):
             charge_token: str
     ) -> dict:
         """
-        Returns a list of all refunds for the specified charge.
-
-        GET /charges/charge-token/refunds
-
-        Example:
-        curl https://test-api.pinpayments.com/1/charges/ch_bZ3RhJnIUZ8HhfvH8CCvfA/refunds -u your-secret-api-key:
-
-        :param charge_token: Charge Token
-        :return: None
+        Retrieves a list of refunds for a specific charge
+        :param charge_token: The charge token for which refunds are being retrieved.
+        :type charge_token: str
+        :return: A dictionary containing the list of refunds for the specified charge.
+        :rtype: dic
+        :raises Exception: If the request fails or returns an error response.
         """
         url = f"{self._base_url}charges/{charge_token}/refunds"
         response = requests.get(url, auth=self._auth)

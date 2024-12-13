@@ -61,9 +61,6 @@ class Events(Base):
     def list(self) -> dict:
         """
         Returns a paginated list of all events.
-
-        GET /events
-
         :return: dict
         """
         response = requests.get(self._base_url, auth=self._auth)
@@ -76,9 +73,6 @@ class Events(Base):
     def details(self, event_token: str) -> dict:
         """
         Returns the details of a specified event.
-
-        GET /events/event-token
-
         :param event_token: The token of the event.
         :return: dict
         """

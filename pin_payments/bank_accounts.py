@@ -25,9 +25,6 @@ class BankAccounts(Base):
     ) -> dict:
         """
         Creates a bank account token and returns its details.
-
-        POST /bank_accounts
-
         :param name: The account holder's name.
         :param bsb: The BSB code of the bank account.
         :param number: The account number of the bank account.
