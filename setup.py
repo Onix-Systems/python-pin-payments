@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
 	name="python-pin-payments",
-	version="0.1.0",  # Increment version for each new release
+	version="0.2.0",  # Increment version for each new release
 	author="Viacheslav Lisovoi",
 	author_email="viacheslav.lisovoi@onix-systems.com",
 	description="Python library for interacting with Pin Payments API",
