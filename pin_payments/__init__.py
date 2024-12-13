@@ -1,4 +1,4 @@
-from .apple_pay import ApplePay
+from .apple_pay import ApplePayAPI as ApplePay
 from .authorisations import Authorisations
 from .balance import Balance
 from .bank_accounts import BankAccounts
@@ -18,7 +18,7 @@ from .refunds import Refunds
 from .subscriptions import Subscriptions
 from .transfers import Transfers
 from .webhooks import Webhooks
-from .webhook_endpoints import WebhookEndpoints
+from .webhooks_endpoints import WebhookEndpoints
 
 __all__ = [
 	'ApplePay',
