@@ -48,7 +48,7 @@ poetry add python-pin-payments
 - For a local or git version:
 
 ```bash
-poetry add git+https://gitlab.onix.ua/onix-systems/python-pin-payments.git#master
+poetry add git+https://github.com/Onix-Systems/python-pin-payments
 ```
 
 ### Install Dependencies

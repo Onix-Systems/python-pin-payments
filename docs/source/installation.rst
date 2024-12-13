@@ -36,4 +36,4 @@ To install the Python-Pin-Payments library, follow these steps:
 
    .. code-block:: bash
 
-      poetry add git+https://github.com/yourusername/python-pin-payments.git
+      poetry add add git+https://github.com/Onix-Systems/python-pin-payments
