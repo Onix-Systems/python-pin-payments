@@ -27,7 +27,7 @@ class Charges(Base):
         :param mode: The mode of operation, either 'live' or 'test'. Default is 'live'.
         """
         super().__init__(api_key=api_key, mode=mode)
-        self._base_url += 'charges'
+        self._base_url += 'charges/'
 
     def create(
             self,
