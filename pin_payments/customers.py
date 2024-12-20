@@ -204,7 +204,7 @@ class Customers(Base):
         :param customer_token: The unique identifier of the customer.
         :return: A dictionary containing the list of cards for the customer.
         """
-        url = f"{self._base_url}{customer_token}/charges.rst"
+        url = f"{self._base_url}{customer_token}/charges"
         response = requests.get(url, auth=self._auth)
 
         return self._handle_response(

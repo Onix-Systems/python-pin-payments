@@ -148,12 +148,12 @@ class TestCustomersAPI(unittest.TestCase):
     def test_get_customers_customer_token_charges_success(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 200
-        mock_response.json.return_value = {"charges.rst": []}
+        mock_response.json.return_value = {"charges": []}
         mock_get.return_value = mock_response
 
         response = self.customers_api.list_charges(customer_token='cus_token')
 
-        self.assertEqual(response, {"charges.rst": []})
+        self.assertEqual(response, {"charges": []})
         mock_get.assert_called_once()
 
     @patch('pin_payments.customers.requests.get')

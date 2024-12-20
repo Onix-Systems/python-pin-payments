@@ -18,7 +18,7 @@ class TestChargesAPI(unittest.TestCase):
         self.assertEqual(self.charges_api._base_url, 'https://api.pinpayments.com/1/charges/')
         self.assertEqual(self.charges_api._auth, HTTPBasicAuth(self.api_key, ''))
 
-    @patch('pin_payments.charges.rst.requests.post')
+    @patch('pin_payments.charges.requests.post')
     def test_post_charges_success(self, mock_post):
         mock_response = MagicMock()
         mock_response.status_code = 201
@@ -45,7 +45,7 @@ class TestChargesAPI(unittest.TestCase):
         }
         mock_post.assert_called_with(self.charges_api._base_url, auth=self.charges_api._auth, data=expected_data)
 
-    @patch('pin_payments.charges.rst.requests.post')
+    @patch('pin_payments.charges.requests.post')
     def test_post_charges_failure(self, mock_post):
         mock_response = MagicMock()
         mock_response.status_code = 400
@@ -73,7 +73,7 @@ class TestChargesAPI(unittest.TestCase):
         }
         mock_post.assert_called_with(self.charges_api._base_url, auth=self.charges_api._auth, data=expected_data)
 
-    @patch('pin_payments.charges.rst.requests.put')
+    @patch('pin_payments.charges.requests.put')
     def test_put_charges_charge_token_void_success(self, mock_put):
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -85,7 +85,7 @@ class TestChargesAPI(unittest.TestCase):
         self.assertEqual(response, {"success": True})
         mock_put.assert_called_once()
 
-    @patch('pin_payments.charges.rst.requests.put')
+    @patch('pin_payments.charges.requests.put')
     def test_put_charges_charge_token_void_failure(self, mock_put):
         mock_response = MagicMock()
         mock_response.status_code = 400
@@ -97,7 +97,7 @@ class TestChargesAPI(unittest.TestCase):
         self.assertIn("error", response)
         mock_put.assert_called_once()
 
-    @patch('pin_payments.charges.rst.requests.put')
+    @patch('pin_payments.charges.requests.put')
     def test_put_charges_charge_token_capture_success(self, mock_put):
         mock_response = MagicMock()
         mock_response.status_code = 201
@@ -109,7 +109,7 @@ class TestChargesAPI(unittest.TestCase):
         self.assertEqual(response, {"success": True})
         mock_put.assert_called_once()
 
-    @patch('pin_payments.charges.rst.requests.put')
+    @patch('pin_payments.charges.requests.put')
     def test_put_charges_charge_token_capture_failure(self, mock_put):
         mock_response = MagicMock()
         mock_response.status_code = 400
@@ -121,7 +121,7 @@ class TestChargesAPI(unittest.TestCase):
         self.assertIn("error", response)
         mock_put.assert_called_once()
 
-    @patch('pin_payments.charges.rst.requests.get')
+    @patch('pin_payments.charges.requests.get')
     def test_get_charges_success(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -133,7 +133,7 @@ class TestChargesAPI(unittest.TestCase):
         self.assertEqual(response, {"success": True})
         mock_get.assert_called_once()
 
-    @patch('pin_payments.charges.rst.requests.get')
+    @patch('pin_payments.charges.requests.get')
     def test_get_charges_failure(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 400
@@ -145,7 +145,7 @@ class TestChargesAPI(unittest.TestCase):
         self.assertIn("error", response)
         mock_get.assert_called_once()
 
-    @patch('pin_payments.charges.rst.requests.get')
+    @patch('pin_payments.charges.requests.get')
     def test_get_charges_search_success(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -157,7 +157,7 @@ class TestChargesAPI(unittest.TestCase):
         self.assertEqual(response, {"success": True})
         mock_get.assert_called_once()
 
-    @patch('pin_payments.charges.rst.requests.get')
+    @patch('pin_payments.charges.requests.get')
     def test_get_charges_search_failure(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 400
@@ -169,7 +169,7 @@ class TestChargesAPI(unittest.TestCase):
         self.assertIn("error", response)
         mock_get.assert_called_once()
 
-    @patch('pin_payments.charges.rst.requests.get')
+    @patch('pin_payments.charges.requests.get')
     def test_get_charges_charge_token_success(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -181,7 +181,7 @@ class TestChargesAPI(unittest.TestCase):
         self.assertEqual(response, {"success": True})
         mock_get.assert_called_once()
 
-    @patch('pin_payments.charges.rst.requests.get')
+    @patch('pin_payments.charges.requests.get')
     def test_get_charges_charge_token_failure(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 400
@@ -193,7 +193,7 @@ class TestChargesAPI(unittest.TestCase):
         self.assertIn("error", response)
         mock_get.assert_called_once()
 
-    @patch('pin_payments.charges.rst.requests.get')
+    @patch('pin_payments.charges.requests.get')
     def test_get_charges_verify_success(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -208,7 +208,7 @@ class TestChargesAPI(unittest.TestCase):
             auth=self.charges_api._auth
         )
 
-    @patch('pin_payments.charges.rst.requests.get')
+    @patch('pin_payments.charges.requests.get')
     def test_get_charges_verify_failure(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 400
