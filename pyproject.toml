@@ -12,6 +12,12 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 
+[project.urls]
+"Homepage" = "https://github.com/Onix-Systems/python-pin-payments"
+"Documentation" = "https://python-pin-payments.readthedocs.io/en/latest/overview.html"
+"Repository" = "https://github.com/Onix-Systems/python-pin-payments"
+"Bug Tracker" = "https://github.com/Onix-Systems/python-pin-payments/issues"
+
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "^2.32.0"
