@@ -46,7 +46,7 @@ class Plans(Base):
         :type name: str
         :param amount: The amount to be charged for the plan.
         :type amount: int
-        :param interval: The interval for recurring charges.
+        :param interval: The interval for recurring charges.rst.
         :type interval: int
         :param interval_unit: The unit of time for the interval (e.g., 'month', 'year').
         :type interval_unit: str

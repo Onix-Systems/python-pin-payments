@@ -10,8 +10,8 @@ from pin_payments.base import Base
 
 class Charges(Base):
     """
-    A class to interact with the Charges API for processing payment card charges.
-    This class provides methods to create, void, capture, list, search, and verify charges.
+    A class to interact with the Charges API for processing payment card charges.rst.
+    This class provides methods to create, void, capture, list, search, and verify charges.rst.
     :param api_key: The API key for authentication.
     :param mode: The mode of operation, either 'live' or 'test'. Default is 'live'.
     """
@@ -27,7 +27,7 @@ class Charges(Base):
         :param mode: The mode of operation, either 'live' or 'test'. Default is 'live'.
         """
         super().__init__(api_key=api_key, mode=mode)
-        self._base_url += 'charges/'
+        self._base_url += 'charges.rst/'
 
     def create(
             self,
@@ -150,8 +150,8 @@ class Charges(Base):
 
     def list(self) -> dict:
         """
-        Returns a paginated list of all charges
-        :return: A dictionary containing the list of charges.
+        Returns a paginated list of all charges.rst
+        :return: A dictionary containing the list of charges.rst.
         """
         response = requests.get(self._base_url, auth=self._auth)
 
@@ -170,12 +170,12 @@ class Charges(Base):
             direction: Optional[int] = None,
     ) -> dict:
         """
-        Searches for charges based on the provided criteria
-        :param query: Return only charges whose fields match the query (optional).
-        :param start_date: Return only charges created on or after this date (optional).
-        :param end_date: Return only charges created before this date (optional).
-        :param sort: The field used to sort the charges (optional).
-        :param direction: The direction in which to sort the charges (optional).
+        Searches for charges.rst based on the provided criteria
+        :param query: Return only charges.rst whose fields match the query (optional).
+        :param start_date: Return only charges.rst created on or after this date (optional).
+        :param end_date: Return only charges.rst created before this date (optional).
+        :param sort: The field used to sort the charges.rst (optional).
+        :param direction: The direction in which to sort the charges.rst (optional).
         :return: A dictionary containing the search results.
         """
         params = {

@@ -9,12 +9,10 @@ Pin payments
     :members:
     :undoc-members:
     :show-inheritance:
-
 .. automodule:: pin_payments.apple_pay
     :members:
     :undoc-members:
     :show-inheritance:
-
 .. automodule:: pin_payments.authorisations
     :members:
     :undoc-members:

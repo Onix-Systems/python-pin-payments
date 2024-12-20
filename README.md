@@ -39,13 +39,13 @@ poetry shell
 
 Add the library as a dependency:
 
-- If published on PyPI:
+- poetry installation:
 
 ```bash
 poetry add python-pin-payments
 ```
 
-- For a local or git version:
+- Alternative way of installing from the repository
 
 ```bash
 poetry add git+https://github.com/Onix-Systems/python-pin-payments

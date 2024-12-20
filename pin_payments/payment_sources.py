@@ -10,7 +10,7 @@ class PaymentSources(Base):
     """
     The Payment Sources API allows you to securely store payment source details
     in exchange for a payment source token.
-    This token can then be used to create a single charge with the charges API.
+    This token can then be used to create a single charge with the charges.rst API.
     """
 
     def __init__(self, api_key: str, mode: str = 'live'):

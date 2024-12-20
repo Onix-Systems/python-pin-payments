@@ -9,7 +9,7 @@ from pin_payments.base import Base
 class Disputes(Base):
     """
     The disputes API allows you to retrieve details of
-    disputes against your charges and perform actions
+    disputes against your charges.rst and perform actions
     to either challenge or accept them.
     """
 
