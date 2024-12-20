@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "python-pin-payments"
-version = "0.1.0"
+version = "0.1.1"
 description = "Python library for interacting with the Pin Payments API"
 authors = ["Viacheslav Lisovoi <viacheslav.lisovoi@onix-systems.com>"]
 readme = "README.md"

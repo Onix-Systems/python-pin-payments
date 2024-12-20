@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.1.1 (2024-12-20)
+
+### Fix
+
+- typo base URL to append trailing slash for charges endpoint
+- Refactor imports for consistency and clarity
+- Simplify ReadTheDocs build configuration.
+- Configure Read the Docs to use Python 3.10 and Ubuntu 22.04
+- Update poetry.lock content hash
+
+### Refactor
+
+- Update ReadTheDocs config to use poetry for dependency management
+
 ## [0.1.0]
 
 ### 🚀 Features
