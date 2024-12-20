@@ -12,7 +12,7 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 
-[project.urls]
+[tool.poetry.urls]
 "Homepage" = "https://github.com/Onix-Systems/python-pin-payments"
 "Documentation" = "https://python-pin-payments.readthedocs.io/en/latest/overview.html"
 "Repository" = "https://github.com/Onix-Systems/python-pin-payments"
