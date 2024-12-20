@@ -26,13 +26,13 @@ To install the Python-Pin-Payments library, follow these steps:
 
 4. **Add Python-Pin-Payments Library**
 
-   If published on PyPI:
+   Poetry installation:
 
    .. code-block:: bash
 
       poetry add python-pin-payments
 
-   If installing from source:
+   Alternative way of installing from the repository:
 
    .. code-block:: bash
 
